@@ -8,7 +8,19 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Eye, Edit2, Trash2 } from "lucide-react";
+import { Eye, Edit2, Trash2, Plus, Ban } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import PropertyListingForm from "@/components/property/PropertyListingForm";
 
 const mockProperties = [
   {
@@ -32,11 +44,51 @@ const mockProperties = [
 ];
 
 const AdminProperties = () => {
+  const { toast } = useToast();
+
+  const handleStatusChange = (propertyId: number, newStatus: string) => {
+    toast({
+      title: `Property ${newStatus}`,
+      description: `Property has been ${newStatus} successfully.`,
+    });
+  };
+
+  const handleDelete = (propertyId: number) => {
+    toast({
+      title: "Property deleted",
+      description: "Property has been deleted successfully.",
+      variant: "destructive",
+    });
+  };
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">Properties</h1>
-        <Button>Add New Property</Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button>
+              <Plus className="mr-2 h-4 w-4" />
+              Add New Property
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-4xl">
+            <DialogHeader>
+              <DialogTitle>Add New Property</DialogTitle>
+              <DialogDescription>
+                Create a new property listing. Fill in all the required information below.
+              </DialogDescription>
+            </DialogHeader>
+            <PropertyListingForm />
+          </DialogContent>
+        </Dialog>
+      </div>
+
+      <div className="flex gap-4">
+        <Input 
+          placeholder="Search properties..." 
+          className="max-w-sm"
+        />
       </div>
 
       <Table>
@@ -74,7 +126,19 @@ const AdminProperties = () => {
                   <Button variant="outline" size="icon">
                     <Edit2 className="h-4 w-4" />
                   </Button>
-                  <Button variant="destructive" size="icon">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="text-red-500"
+                    onClick={() => handleStatusChange(property.id, "unlisted")}
+                  >
+                    <Ban className="h-4 w-4" />
+                  </Button>
+                  <Button 
+                    variant="destructive" 
+                    size="icon"
+                    onClick={() => handleDelete(property.id)}
+                  >
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
