@@ -8,6 +8,7 @@ import { BasicInfoFields } from "./form-fields/BasicInfoFields";
 import { PropertyDetailsFields } from "./form-fields/PropertyDetailsFields";
 import { LocationFields } from "./form-fields/LocationFields";
 import { ManagementFields } from "./form-fields/ManagementFields";
+import { ImageUploadFields } from "./form-fields/ImageUploadFields";
 
 const formSchema = z.object({
   title: z.string().min(10, "Title must be at least 10 characters"),
@@ -19,6 +20,7 @@ const formSchema = z.object({
   city: z.string().min(1, "City is required"),
   location: z.string().min(1, "Location is required"),
   managementType: z.string().min(1, "Management type is required"),
+  images: z.array(z.string()).min(1, "At least one image is required").max(7, "Maximum 7 images allowed"),
 });
 
 const PropertyListingForm = () => {
@@ -34,6 +36,7 @@ const PropertyListingForm = () => {
       city: "",
       location: "",
       managementType: "",
+      images: [],
     },
   });
 
@@ -57,6 +60,8 @@ const PropertyListingForm = () => {
           <LocationFields form={form} />
           <ManagementFields form={form} />
         </div>
+
+        <ImageUploadFields form={form} />
 
         <Button type="submit" className="w-full">
           List Property
