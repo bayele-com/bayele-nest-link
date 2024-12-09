@@ -5,6 +5,7 @@ import { Search, MapPin, Home, Building2, Phone } from "lucide-react";
 import { PropertyFilters, FilterValues } from "@/components/PropertyFilters";
 import PropertyCard from "@/components/PropertyCard";
 import MainNav from "@/components/navigation/MainNav";
+import Footer from "@/components/navigation/Footer";
 
 const properties = [
   {
@@ -66,7 +67,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen flex flex-col">
       <MainNav />
       
       {/* Hero Section */}
@@ -115,6 +116,8 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      <Footer />
     </div>
   );
 };
