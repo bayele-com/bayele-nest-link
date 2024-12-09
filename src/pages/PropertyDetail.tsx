@@ -7,6 +7,7 @@ import PropertyDetails from "@/components/property/PropertyDetails";
 import PropertyFeatures from "@/components/property/PropertyFeatures";
 import PropertyContactButtons from "@/components/property/PropertyContactButtons";
 import { MapPin, Calendar } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const PropertyDetail = () => {
   const { id } = useParams();
