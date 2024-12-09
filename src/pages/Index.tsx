@@ -71,7 +71,7 @@ const Index = () => {
       <MainNav />
       
       {/* Hero Section */}
-      <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
+      <section className="relative h-[90vh] flex items-center justify-center">
         <div
           className="absolute inset-0 z-0"
           style={{
@@ -99,8 +99,8 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Featured Properties - Added margin-top for proper spacing */}
-      <section className="py-20 bg-secondary -mt-20">
+      {/* Featured Properties */}
+      <section className="py-20 bg-secondary">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12 animate-fade-up">
             <h2 className="text-3xl font-bold mb-4">Featured Properties</h2>
