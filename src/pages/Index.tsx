@@ -70,8 +70,8 @@ const Index = () => {
     <div className="min-h-screen flex flex-col">
       <MainNav />
       
-      {/* Hero Section */}
-      <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
+      {/* Hero Section - Added mt-16 to create space below the fixed navbar */}
+      <section className="relative h-[80vh] mt-16 flex items-center justify-center overflow-hidden">
         <div
           className="absolute inset-0 z-0"
           style={{
