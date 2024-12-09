@@ -1,10 +1,7 @@
+import { Outlet } from "react-router-dom";
 import AdminNav from "./AdminNav";
 
-interface AdminLayoutProps {
-  children: React.ReactNode;
-}
-
-const AdminLayout = ({ children }: AdminLayoutProps) => {
+const AdminLayout = () => {
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b">
@@ -15,7 +12,9 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
           <AdminNav />
         </div>
       </header>
-      <main className="container px-4 py-8">{children}</main>
+      <main className="container px-4 py-8">
+        <Outlet />
+      </main>
     </div>
   );
 };
