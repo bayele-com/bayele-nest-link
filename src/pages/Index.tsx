@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Search, MapPin, Home, Building2, Phone } from "lucide-react";
 import { PropertyFilters, FilterValues } from "@/components/PropertyFilters";
+import PropertyCard from "@/components/PropertyCard";
 
 const properties = [
   {
@@ -13,7 +14,11 @@ const properties = [
     type: "Apartment",
     bedrooms: 3,
     bathrooms: 2,
-    image: "https://images.unsplash.com/photo-1721322800607-8c38375eef04",
+    image: "https://images.unsplash.com/photo-1518005020951-eccb494ad742",
+    status: "available" as const,
+    amenities: ["Air Conditioning", "Parking", "Security"],
+    whatsapp: "237612345678",
+    phone: "237612345678",
   },
   {
     id: 2,
@@ -23,7 +28,11 @@ const properties = [
     type: "Villa",
     bedrooms: 5,
     bathrooms: 4,
-    image: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7",
+    image: "https://images.unsplash.com/photo-1513836279014-a89f7a76ae86",
+    status: "maintenance" as const,
+    amenities: ["Pool", "Garden", "Security", "Garage"],
+    whatsapp: "237612345678",
+    phone: "237612345678",
   },
   {
     id: 3,
@@ -33,7 +42,11 @@ const properties = [
     type: "Studio",
     bedrooms: 1,
     bathrooms: 1,
-    image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
+    image: "https://images.unsplash.com/photo-1500673922987-e212871fec22",
+    status: "occupied" as const,
+    amenities: ["Furnished", "Internet", "Water Supply"],
+    whatsapp: "237612345678",
+    phone: "237612345678",
   },
 ];
 
@@ -49,7 +62,6 @@ const Index = () => {
   const handleFilterChange = (newFilters: FilterValues) => {
     setFilters(newFilters);
     console.log("Filters updated:", newFilters);
-    // Here we would typically fetch filtered properties
   };
 
   return (
@@ -95,48 +107,7 @@ const Index = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {properties.map((property) => (
-              <Card key={property.id} className="property-card">
-                <div className="relative">
-                  <img
-                    src={property.image}
-                    alt={property.title}
-                    className="property-image"
-                  />
-                  <div className="absolute top-4 right-4">
-                    <Button variant="secondary" size="sm">
-                      {property.type}
-                    </Button>
-                  </div>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold mb-2">{property.title}</h3>
-                  <div className="flex items-center text-muted-foreground mb-4">
-                    <MapPin className="h-4 w-4 mr-2" />
-                    {property.location}
-                  </div>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-4">
-                      <div className="flex items-center">
-                        <Home className="h-4 w-4 mr-2" />
-                        {property.bedrooms} bed
-                      </div>
-                      <div className="flex items-center">
-                        <Building2 className="h-4 w-4 mr-2" />
-                        {property.bathrooms} bath
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="text-xl font-bold text-primary">
-                      {property.price} FCFA
-                    </div>
-                    <Button>
-                      <Phone className="h-4 w-4 mr-2" />
-                      Contact
-                    </Button>
-                  </div>
-                </div>
-              </Card>
+              <PropertyCard key={property.id} property={property} />
             ))}
           </div>
         </div>
