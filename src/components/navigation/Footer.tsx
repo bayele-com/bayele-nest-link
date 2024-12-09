@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Facebook, Linkedin, Twitter, Globe, WhatsApp } from "lucide-react";
+import { Facebook, Linkedin, Twitter, Globe, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
@@ -84,7 +84,7 @@ const Footer = () => {
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-foreground"
               >
-                <WhatsApp className="h-5 w-5" />
+                <MessageSquare className="h-5 w-5" />
               </a>
               <a
                 href="https://linkedin.com/company/bayele"
