@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Search, MapPin, Home, Building2, Phone } from "lucide-react";
+import { PropertyFilters, FilterValues } from "@/components/PropertyFilters";
 
-const cities = ["Yaoundé", "Douala"];
 const properties = [
   {
     id: 1,
@@ -39,7 +38,19 @@ const properties = [
 ];
 
 const Index = () => {
-  const [selectedCity, setSelectedCity] = useState<string>("Yaoundé");
+  const [filters, setFilters] = useState<FilterValues>({
+    city: "",
+    propertyType: "",
+    minPrice: "",
+    maxPrice: "",
+    bedrooms: "",
+  });
+
+  const handleFilterChange = (newFilters: FilterValues) => {
+    setFilters(newFilters);
+    console.log("Filters updated:", newFilters);
+    // Here we would typically fetch filtered properties
+  };
 
   return (
     <div className="min-h-screen">
@@ -62,37 +73,11 @@ const Index = () => {
               Find Your Perfect Home in Cameroon
             </h1>
             <p className="text-xl text-white/90 mb-8">
-              Discover properties in {selectedCity} that match your lifestyle
+              Discover properties that match your lifestyle
             </p>
 
-            <div className="max-w-3xl mx-auto">
-              <div className="glass-card p-4 rounded-2xl">
-                <div className="flex flex-col md:flex-row gap-4">
-                  <div className="flex-1">
-                    <Input
-                      placeholder="Search for properties..."
-                      className="w-full h-12"
-                    />
-                  </div>
-                  <div className="flex gap-2">
-                    {cities.map((city) => (
-                      <Button
-                        key={city}
-                        variant={selectedCity === city ? "default" : "outline"}
-                        onClick={() => setSelectedCity(city)}
-                        className="h-12 px-6"
-                      >
-                        <MapPin className="mr-2 h-4 w-4" />
-                        {city}
-                      </Button>
-                    ))}
-                  </div>
-                  <Button className="h-12 px-8">
-                    <Search className="mr-2 h-4 w-4" />
-                    Search
-                  </Button>
-                </div>
-              </div>
+            <div className="max-w-4xl mx-auto">
+              <PropertyFilters onFilterChange={handleFilterChange} />
             </div>
           </div>
         </div>
@@ -104,7 +89,7 @@ const Index = () => {
           <div className="text-center mb-12 animate-fade-up">
             <h2 className="text-3xl font-bold mb-4">Featured Properties</h2>
             <p className="text-muted-foreground">
-              Explore our hand-picked properties in {selectedCity}
+              Explore our hand-picked properties
             </p>
           </div>
 
