@@ -8,7 +8,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { MapPin, Phone, Home, Bath, WhatsApp } from "lucide-react";
+import { MapPin, Phone, Home, Bath, MessageCircle } from "lucide-react";
 
 const PropertyDetail = () => {
   const { id } = useParams();
@@ -125,7 +125,7 @@ const PropertyDetail = () => {
                       Call Now
                     </Button>
                     <Button onClick={handleWhatsApp} variant="outline" className="w-full">
-                      <WhatsApp className="mr-2 h-4 w-4" />
+                      <MessageCircle className="mr-2 h-4 w-4" />
                       WhatsApp
                     </Button>
                   </div>
