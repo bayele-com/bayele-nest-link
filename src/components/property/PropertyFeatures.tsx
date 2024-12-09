@@ -1,19 +1,22 @@
+import { CheckCircle2 } from "lucide-react";
+
 interface PropertyFeaturesProps {
+  title: string;
   features: string[];
 }
 
-const PropertyFeatures = ({ features }: PropertyFeaturesProps) => {
+const PropertyFeatures = ({ title, features }: PropertyFeaturesProps) => {
   return (
     <div>
-      <h3 className="font-semibold mb-2">Features</h3>
-      <ul className="grid grid-cols-2 gap-2">
+      <h3 className="font-semibold mb-4">{title}</h3>
+      <div className="grid grid-cols-2 gap-4">
         {features.map((feature, index) => (
-          <li key={index} className="flex items-center text-muted-foreground">
-            <span className="h-1.5 w-1.5 rounded-full bg-primary mr-2" />
+          <div key={index} className="flex items-center text-muted-foreground">
+            <CheckCircle2 className="h-4 w-4 mr-2 text-primary" />
             {feature}
-          </li>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };

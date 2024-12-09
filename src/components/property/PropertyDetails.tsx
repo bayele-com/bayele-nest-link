@@ -1,4 +1,4 @@
-import { MapPin, Home, Bath } from "lucide-react";
+import { MapPin, Home, Bath, Maximize } from "lucide-react";
 
 interface PropertyDetailsProps {
   title: string;
@@ -6,6 +6,7 @@ interface PropertyDetailsProps {
   price: string;
   bedrooms: number;
   bathrooms: number;
+  area: string;
   description: string;
 }
 
@@ -15,37 +16,32 @@ const PropertyDetails = ({
   price,
   bedrooms,
   bathrooms,
+  area,
   description,
 }: PropertyDetailsProps) => {
   return (
-    <div className="space-y-4">
-      <div>
-        <h1 className="text-3xl font-bold mb-2">{title}</h1>
-        <div className="flex items-center text-muted-foreground">
-          <MapPin className="h-4 w-4 mr-2" />
-          {location}
+    <div className="space-y-6">
+      <div className="grid grid-cols-3 gap-4">
+        <div className="flex flex-col items-center p-4 bg-secondary/50 rounded-lg">
+          <Home className="h-5 w-5 mb-2 text-primary" />
+          <span className="text-sm text-muted-foreground">Bedrooms</span>
+          <span className="font-semibold">{bedrooms}</span>
         </div>
-      </div>
-
-      <div>
-        <h2 className="text-2xl font-semibold mb-2">
-          {price} FCFA/month
-        </h2>
-        <div className="flex gap-4 text-muted-foreground">
-          <div className="flex items-center">
-            <Home className="h-4 w-4 mr-2" />
-            {bedrooms} bed
-          </div>
-          <div className="flex items-center">
-            <Bath className="h-4 w-4 mr-2" />
-            {bathrooms} bath
-          </div>
+        <div className="flex flex-col items-center p-4 bg-secondary/50 rounded-lg">
+          <Bath className="h-5 w-5 mb-2 text-primary" />
+          <span className="text-sm text-muted-foreground">Bathrooms</span>
+          <span className="font-semibold">{bathrooms}</span>
+        </div>
+        <div className="flex flex-col items-center p-4 bg-secondary/50 rounded-lg">
+          <Maximize className="h-5 w-5 mb-2 text-primary" />
+          <span className="text-sm text-muted-foreground">Area</span>
+          <span className="font-semibold">{area} m²</span>
         </div>
       </div>
 
       <div>
         <h3 className="font-semibold mb-2">Description</h3>
-        <p className="text-muted-foreground">{description}</p>
+        <p className="text-muted-foreground whitespace-pre-line">{description}</p>
       </div>
     </div>
   );
