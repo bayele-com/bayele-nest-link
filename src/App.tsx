@@ -11,6 +11,8 @@ import AdminLayout from "./components/admin/AdminLayout";
 import AdminProperties from "./pages/AdminProperties";
 import AdminUsers from "./pages/AdminUsers";
 import AdminSettings from "./pages/AdminSettings";
+import LoginPage from "./pages/auth/LoginPage";
+import RegisterPage from "./pages/auth/RegisterPage";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +26,8 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/property/:id" element={<PropertyDetail />} />
           <Route path="/manage" element={<PropertyManagement />} />
+          <Route path="/auth/login" element={<LoginPage />} />
+          <Route path="/auth/register" element={<RegisterPage />} />
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
             <Route path="properties" element={<AdminProperties />} />
