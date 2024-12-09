@@ -70,8 +70,8 @@ const Index = () => {
     <div className="min-h-screen flex flex-col">
       <MainNav />
       
-      {/* Hero Section - Added mt-16 to create space below the fixed navbar */}
-      <section className="relative h-[80vh] mt-16 flex items-center justify-center overflow-hidden">
+      {/* Hero Section - Adjusted positioning and z-index */}
+      <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
         <div
           className="absolute inset-0 z-0"
           style={{
@@ -83,7 +83,7 @@ const Index = () => {
           <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
         </div>
 
-        <div className="container relative z-10 mx-auto px-4">
+        <div className="container relative z-10 mx-auto px-4 pt-16">
           <div className="text-center animate-fade-down">
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
               Find Your Perfect Home in Cameroon
