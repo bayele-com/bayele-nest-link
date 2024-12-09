@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Search, MapPin, Home, Building2, Phone } from "lucide-react";
 import { PropertyFilters, FilterValues } from "@/components/PropertyFilters";
 import PropertyCard from "@/components/PropertyCard";
+import MainNav from "@/components/navigation/MainNav";
 
 const properties = [
   {
@@ -66,6 +67,8 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
+      <MainNav />
+      
       {/* Hero Section */}
       <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
         <div
