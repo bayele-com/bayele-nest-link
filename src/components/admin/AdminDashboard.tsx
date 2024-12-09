@@ -8,7 +8,15 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle2, XCircle } from "lucide-react";
+import { CheckCircle2, XCircle, AlertCircle } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 const mockProperties = [
   {
@@ -51,8 +59,72 @@ const mockUsers = [
 ];
 
 const AdminDashboard = () => {
+  const { toast } = useToast();
+
+  const handleApprove = (propertyId: number) => {
+    toast({
+      title: "Property Approved",
+      description: "The property has been approved and is now live.",
+    });
+  };
+
+  const handleReject = (propertyId: number) => {
+    toast({
+      title: "Property Rejected",
+      description: "The property has been rejected.",
+      variant: "destructive",
+    });
+  };
+
   return (
     <div className="space-y-8">
+      {/* Stats Overview */}
+      <div className="grid gap-4 md:grid-cols-3">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Pending Approvals
+            </CardTitle>
+            <AlertCircle className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">4</div>
+            <p className="text-xs text-muted-foreground">
+              Properties awaiting review
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Active Properties
+            </CardTitle>
+            <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">245</div>
+            <p className="text-xs text-muted-foreground">
+              Currently listed properties
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Total Users
+            </CardTitle>
+            <AlertCircle className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">573</div>
+            <p className="text-xs text-muted-foreground">
+              Registered users on platform
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Pending Approvals */}
       <div>
         <h2 className="text-2xl font-semibold mb-4">Pending Approvals</h2>
         <Table>
@@ -84,10 +156,18 @@ const AdminDashboard = () => {
                 </TableCell>
                 <TableCell>
                   <div className="flex gap-2">
-                    <Button variant="outline" size="icon">
+                    <Button 
+                      variant="outline" 
+                      size="icon"
+                      onClick={() => handleApprove(property.id)}
+                    >
                       <CheckCircle2 className="h-4 w-4 text-green-500" />
                     </Button>
-                    <Button variant="outline" size="icon">
+                    <Button 
+                      variant="outline" 
+                      size="icon"
+                      onClick={() => handleReject(property.id)}
+                    >
                       <XCircle className="h-4 w-4 text-red-500" />
                     </Button>
                   </div>
@@ -98,8 +178,9 @@ const AdminDashboard = () => {
         </Table>
       </div>
 
+      {/* Recent Users */}
       <div>
-        <h2 className="text-2xl font-semibold mb-4">User Management</h2>
+        <h2 className="text-2xl font-semibold mb-4">Recent Users</h2>
         <Table>
           <TableHeader>
             <TableRow>

@@ -8,7 +8,16 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Edit2, Lock, Unlock } from "lucide-react";
+import { Edit2, Lock, Unlock, UserPlus } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 
 const mockUsers = [
   {
@@ -32,11 +41,68 @@ const mockUsers = [
 ];
 
 const AdminUsers = () => {
+  const { toast } = useToast();
+
+  const handleStatusChange = (userId: number, newStatus: string) => {
+    toast({
+      title: `User ${newStatus === 'active' ? 'Activated' : 'Deactivated'}`,
+      description: `User status has been updated to ${newStatus}.`,
+    });
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">Users</h1>
-        <Button>Add New User</Button>
+        <Button>
+          <UserPlus className="mr-2 h-4 w-4" />
+          Add New User
+        </Button>
+      </div>
+
+      {/* User Stats */}
+      <div className="grid gap-4 md:grid-cols-3">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Users</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">573</div>
+            <p className="text-xs text-muted-foreground">
+              +12 from last month
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Active Users</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">489</div>
+            <p className="text-xs text-muted-foreground">
+              85% of total users
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Property Owners</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">245</div>
+            <p className="text-xs text-muted-foreground">
+              42% of total users
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Search and Filter */}
+      <div className="flex gap-4">
+        <Input 
+          placeholder="Search users..." 
+          className="max-w-sm"
+        />
       </div>
 
       <Table>
@@ -77,6 +143,7 @@ const AdminUsers = () => {
                     variant="outline"
                     size="icon"
                     className={user.status === "active" ? "text-red-500" : "text-green-500"}
+                    onClick={() => handleStatusChange(user.id, user.status === "active" ? "inactive" : "active")}
                   >
                     {user.status === "active" ? (
                       <Lock className="h-4 w-4" />
