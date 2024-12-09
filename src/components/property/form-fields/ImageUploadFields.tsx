@@ -2,7 +2,7 @@ import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/comp
 import { Input } from "@/components/ui/input";
 import { UseFormReturn } from "react-hook-form";
 import * as z from "zod";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { ImagePlus, X } from "lucide-react";
 
@@ -16,6 +16,7 @@ const formSchema = z.object({
 
 export const ImageUploadFields = ({ form }: ImageUploadFieldsProps) => {
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -53,6 +54,7 @@ export const ImageUploadFields = ({ form }: ImageUploadFieldsProps) => {
           <FormControl>
             <div className="space-y-4">
               <Input
+                ref={fileInputRef}
                 type="file"
                 accept="image/*"
                 multiple
@@ -83,7 +85,7 @@ export const ImageUploadFields = ({ form }: ImageUploadFieldsProps) => {
                     type="button"
                     variant="outline"
                     className="h-32 w-full flex flex-col items-center justify-center gap-2"
-                    onClick={() => document.querySelector('input[type="file"]')?.click()}
+                    onClick={() => fileInputRef.current?.click()}
                   >
                     <ImagePlus className="h-8 w-8" />
                     <span className="text-sm">Add Image</span>
