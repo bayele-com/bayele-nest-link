@@ -70,7 +70,7 @@ const Index = () => {
     <div className="min-h-screen flex flex-col">
       <MainNav />
       
-      {/* Hero Section - Adjusted positioning and z-index */}
+      {/* Hero Section */}
       <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
         <div
           className="absolute inset-0 z-0"
@@ -99,8 +99,8 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Featured Properties */}
-      <section className="py-20 bg-secondary">
+      {/* Featured Properties - Added margin-top for proper spacing */}
+      <section className="py-20 bg-secondary -mt-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12 animate-fade-up">
             <h2 className="text-3xl font-bold mb-4">Featured Properties</h2>
