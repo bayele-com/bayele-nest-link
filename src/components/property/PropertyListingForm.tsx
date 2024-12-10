@@ -14,6 +14,7 @@ import { PropertyDetailsFields } from "./form-fields/PropertyDetailsFields";
 import { ManagementFields } from "./form-fields/ManagementFields";
 import { ContactFields } from "./form-fields/ContactFields";
 import { ImageUploadFields } from "./form-fields/ImageUploadFields";
+import { PropertyType, City, ManagementType } from "@/integrations/supabase/types/enums";
 
 const PropertyListingForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -27,14 +28,14 @@ const PropertyListingForm = () => {
     defaultValues: {
       title: "",
       description: "",
-      type: "apartment",
-      city: "yaounde",
+      type: PropertyType.APARTMENT,
+      city: City.YAOUNDE,
       location: "",
       price: 0,
       bedrooms: 0,
       bathrooms: 0,
       area: undefined,
-      management_type: "self",
+      management_type: ManagementType.SELF,
       phone: "",
       whatsapp: "",
     },
@@ -104,7 +105,7 @@ const PropertyListingForm = () => {
         .insert({
           ...data,
           owner_id: user.id,
-          status: 'pending' as const,
+          status: 'pending',
         })
         .select()
         .single();

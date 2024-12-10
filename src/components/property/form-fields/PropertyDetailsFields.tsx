@@ -8,18 +8,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { UseFormReturn } from "react-hook-form";
-import * as z from "zod";
+import { PropertyFormValues } from "../schemas/propertyFormSchema";
+import { PropertyType } from "@/integrations/supabase/types/enums";
 
 interface PropertyDetailsFieldsProps {
-  form: UseFormReturn<z.infer<typeof formSchema>>;
+  form: UseFormReturn<PropertyFormValues>;
 }
-
-const formSchema = z.object({
-  price: z.string().min(1, "Price is required"),
-  type: z.string().min(1, "Property type is required"),
-  bedrooms: z.string().min(1, "Number of bedrooms is required"),
-  bathrooms: z.string().min(1, "Number of bathrooms is required"),
-});
 
 export const PropertyDetailsFields = ({ form }: PropertyDetailsFieldsProps) => {
   return (
@@ -51,10 +45,11 @@ export const PropertyDetailsFields = ({ form }: PropertyDetailsFieldsProps) => {
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                <SelectItem value="apartment">Apartment</SelectItem>
-                <SelectItem value="house">House</SelectItem>
-                <SelectItem value="studio">Studio</SelectItem>
-                <SelectItem value="villa">Villa</SelectItem>
+                {Object.entries(PropertyType).map(([key, value]) => (
+                  <SelectItem key={value} value={value}>
+                    {key.charAt(0) + key.slice(1).toLowerCase()}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
             <FormMessage />
