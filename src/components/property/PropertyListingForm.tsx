@@ -32,8 +32,8 @@ const PropertyListingForm = () => {
       city: City.YAOUNDE,
       location: "",
       price: 0,
-      bedrooms: 0,
-      bathrooms: 0,
+      bedrooms: 1,
+      bathrooms: 1,
       area: undefined,
       management_type: ManagementType.SELF,
       phone: "",
@@ -104,6 +104,7 @@ const PropertyListingForm = () => {
         ...data,
         owner_id: user.id,
         status: PropertyStatus.PENDING,
+        amenities: [] as string[],
       };
 
       const { data: property, error: insertError } = await supabase
