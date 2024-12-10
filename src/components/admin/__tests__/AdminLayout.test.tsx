@@ -6,6 +6,7 @@ import AdminLayout from '../AdminLayout';
 import { toast } from 'sonner';
 import { supabase } from '@/lib/supabase';
 import '@testing-library/jest-dom';
+import { PostgrestFilterBuilder } from '@supabase/postgrest-js';
 
 // Mock dependencies
 vi.mock('sonner', () => ({
@@ -21,7 +22,7 @@ vi.mock('@/lib/supabase', () => ({
       select: vi.fn(() => ({
         eq: vi.fn(() => ({
           single: vi.fn(),
-        })),
+        })) as unknown as PostgrestFilterBuilder<any>,
       })),
     })),
     auth: {
@@ -58,7 +59,7 @@ describe('AdminLayout', () => {
           single: mockGetProfile,
         }),
       }),
-    }));
+    }) as unknown as ReturnType<typeof supabase.from>);
 
     renderAdminLayout();
 
@@ -79,7 +80,7 @@ describe('AdminLayout', () => {
           single: mockGetProfile,
         }),
       }),
-    }));
+    }) as unknown as ReturnType<typeof supabase.from>);
 
     renderAdminLayout();
 
@@ -100,7 +101,7 @@ describe('AdminLayout', () => {
           single: mockGetProfile,
         }),
       }),
-    }));
+    }) as unknown as ReturnType<typeof supabase.from>);
 
     renderAdminLayout();
 
