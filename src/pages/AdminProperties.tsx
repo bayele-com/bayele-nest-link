@@ -71,7 +71,7 @@ const AdminProperties = () => {
   });
 
   const handleStatusChange = (propertyId: string, currentStatus: PropertyStatus) => {
-    const newStatus: PropertyStatus = currentStatus === 'available' ? 'maintenance' : 'available';
+    const newStatus = currentStatus === PropertyStatus.AVAILABLE ? PropertyStatus.MAINTENANCE : PropertyStatus.AVAILABLE;
     updateStatusMutation.mutate({ propertyId, status: newStatus });
   };
 
