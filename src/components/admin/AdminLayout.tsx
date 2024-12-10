@@ -5,6 +5,7 @@ import AdminNav from "./AdminNav";
 import { Button } from "@/components/ui/button";
 import { Home, LogOut } from "lucide-react";
 import { toast } from "sonner";
+import { supabase } from "@/lib/supabase";
 
 const AdminLayout = () => {
   const { user, signOut } = useAuth();
