@@ -13,10 +13,11 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { PropertyStatus } from "@/integrations/supabase/types/enums";
 
 interface PropertyCardProps {
   property: {
-    id: string; // Changed from number to string to match UUID from Supabase
+    id: string;
     title: string;
     location: string;
     price: string;
@@ -24,7 +25,7 @@ interface PropertyCardProps {
     bedrooms: number;
     bathrooms: number;
     image: string;
-    status?: "available" | "occupied" | "maintenance";
+    status?: PropertyStatus;
     amenities?: string[];
     whatsapp?: string;
     phone?: string;
@@ -50,7 +51,7 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
     }
   };
 
-  const getStatusColor = (status?: string) => {
+  const getStatusColor = (status?: PropertyStatus) => {
     switch (status) {
       case "available":
         return "bg-green-500/10 text-green-500";
@@ -58,9 +59,18 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
         return "bg-red-500/10 text-red-500";
       case "maintenance":
         return "bg-yellow-500/10 text-yellow-500";
+      case "pending":
+        return "bg-blue-500/10 text-blue-500";
+      case "rejected":
+        return "bg-red-500/10 text-red-500";
       default:
         return "bg-green-500/10 text-green-500";
     }
+  };
+
+  // Only show public-facing statuses in the card
+  const shouldShowStatus = (status?: PropertyStatus) => {
+    return status === "available" || status === "occupied" || status === "maintenance";
   };
 
   return (
@@ -76,7 +86,7 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
             <Badge variant="secondary" className="bg-white/90">
               {property.type}
             </Badge>
-            {property.status && (
+            {property.status && shouldShowStatus(property.status) && (
               <Badge className={cn("capitalize", getStatusColor(property.status))}>
                 {property.status}
               </Badge>
