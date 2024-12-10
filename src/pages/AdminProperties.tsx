@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import AddPropertyDialog from "@/components/admin/properties/AddPropertyDialog";
 import { useNavigate } from "react-router-dom";
+import { PropertyStatus } from "@/integrations/supabase/types/enums";
 
 const AdminProperties = () => {
   const navigate = useNavigate();
@@ -52,7 +53,7 @@ const AdminProperties = () => {
   });
 
   const updateStatusMutation = useMutation({
-    mutationFn: async ({ propertyId, status }: { propertyId: string; status: string }) => {
+    mutationFn: async ({ propertyId, status }: { propertyId: string; status: PropertyStatus }) => {
       const { error } = await supabase
         .from('properties')
         .update({ status })
@@ -69,8 +70,8 @@ const AdminProperties = () => {
     }
   });
 
-  const handleStatusChange = (propertyId: string, currentStatus: string) => {
-    const newStatus = currentStatus === 'available' ? 'unavailable' : 'available';
+  const handleStatusChange = (propertyId: string, currentStatus: PropertyStatus) => {
+    const newStatus: PropertyStatus = currentStatus === 'available' ? 'maintenance' : 'available';
     updateStatusMutation.mutate({ propertyId, status: newStatus });
   };
 

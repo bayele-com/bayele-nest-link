@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Edit2, Lock, Trash2, Unlock } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
+import { Profile } from "@/integrations/supabase/types/profiles";
 
 const UsersTable = () => {
   const { toast } = useToast();
@@ -20,18 +21,18 @@ const UsersTable = () => {
   const { data: users, isLoading } = useQuery({
     queryKey: ['admin-users'],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data: profiles, error } = await supabase
         .from('profiles')
         .select('*')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return data;
+      return profiles as Profile[];
     }
   });
 
   const updateUserMutation = useMutation({
-    mutationFn: async ({ userId, updates }: { userId: string, updates: any }) => {
+    mutationFn: async ({ userId, updates }: { userId: string, updates: Partial<Profile> }) => {
       const { error } = await supabase
         .from('profiles')
         .update(updates)
@@ -80,7 +81,7 @@ const UsersTable = () => {
     }
   });
 
-  const handleStatusChange = (userId: string, currentStatus: string) => {
+  const handleStatusChange = (userId: string, currentStatus?: string) => {
     const newStatus = currentStatus === "active" ? "inactive" : "active";
     updateUserMutation.mutate({ 
       userId, 
@@ -103,7 +104,6 @@ const UsersTable = () => {
       <TableHeader>
         <TableRow>
           <TableHead>Name</TableHead>
-          <TableHead>Email</TableHead>
           <TableHead>Role</TableHead>
           <TableHead>Status</TableHead>
           <TableHead>Joined</TableHead>
@@ -116,7 +116,6 @@ const UsersTable = () => {
             <TableCell className="font-medium">
               {user.first_name} {user.last_name}
             </TableCell>
-            <TableCell>{user.email}</TableCell>
             <TableCell>
               <Badge variant="outline">{user.role}</Badge>
             </TableCell>
