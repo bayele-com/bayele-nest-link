@@ -101,7 +101,18 @@ const PropertyListingForm = () => {
       setIsSubmitting(true);
 
       const propertyData = {
-        ...data,
+        title: data.title,
+        description: data.description,
+        type: data.type,
+        city: data.city,
+        location: data.location,
+        price: data.price,
+        bedrooms: data.bedrooms,
+        bathrooms: data.bathrooms,
+        area: data.area,
+        management_type: data.management_type,
+        phone: data.phone,
+        whatsapp: data.whatsapp,
         owner_id: user.id,
         status: PropertyStatus.PENDING,
         amenities: [] as string[],

@@ -8,16 +8,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { UseFormReturn } from "react-hook-form";
-import * as z from "zod";
+import { PropertyFormValues } from "../schemas/propertyFormSchema";
+import { City } from "@/integrations/supabase/types/enums";
 
 interface LocationFieldsProps {
-  form: UseFormReturn<z.infer<typeof formSchema>>;
+  form: UseFormReturn<PropertyFormValues>;
 }
-
-const formSchema = z.object({
-  city: z.string().min(1, "City is required"),
-  location: z.string().min(1, "Location is required"),
-});
 
 export const LocationFields = ({ form }: LocationFieldsProps) => {
   return (
@@ -35,8 +31,11 @@ export const LocationFields = ({ form }: LocationFieldsProps) => {
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                <SelectItem value="yaounde">Yaoundé</SelectItem>
-                <SelectItem value="douala">Douala</SelectItem>
+                {Object.entries(City).map(([key, value]) => (
+                  <SelectItem key={value} value={value}>
+                    {key === 'YAOUNDE' ? 'Yaoundé' : 'Douala'}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
             <FormMessage />
