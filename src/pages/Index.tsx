@@ -7,7 +7,7 @@ import PropertyCard from "@/components/PropertyCard";
 import MainNav from "@/components/navigation/MainNav";
 import Footer from "@/components/navigation/Footer";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabase";
 import { Tables } from "@/integrations/supabase/types";
 
 type Property = Tables<"properties">;
@@ -58,7 +58,6 @@ const Index = () => {
 
   const handleFilterChange = (newFilters: FilterValues) => {
     setFilters(newFilters);
-    console.log("Filters updated:", newFilters);
   };
 
   return (
