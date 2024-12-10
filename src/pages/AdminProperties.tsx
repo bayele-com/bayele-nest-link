@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Eye, Edit2, Trash2, Plus, Ban } from "lucide-react";
+import { Eye, Edit2, Trash2, Ban } from "lucide-react";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import AddPropertyDialog from "@/components/admin/properties/AddPropertyDialog";
@@ -81,13 +81,13 @@ const AdminProperties = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div className="p-8">Loading...</div>;
   }
 
   return (
-    <div className="space-y-6 p-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Properties</h1>
+    <div className="space-y-6 p-4 md:p-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <h1 className="text-2xl md:text-3xl font-bold">Properties</h1>
         <AddPropertyDialog />
       </div>
 
@@ -98,70 +98,72 @@ const AdminProperties = () => {
         />
       </div>
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Property</TableHead>
-            <TableHead>Owner</TableHead>
-            <TableHead>Type</TableHead>
-            <TableHead>Location</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {properties?.map((property) => (
-            <TableRow key={property.id}>
-              <TableCell className="font-medium">{property.title}</TableCell>
-              <TableCell>
-                {property.profiles?.first_name} {property.profiles?.last_name}
-              </TableCell>
-              <TableCell>{property.type}</TableCell>
-              <TableCell>{property.location}</TableCell>
-              <TableCell>
-                <Badge
-                  variant={property.status === "available" ? "default" : "secondary"}
-                >
-                  {property.status}
-                </Badge>
-              </TableCell>
-              <TableCell>
-                <div className="flex gap-2">
-                  <Button 
-                    variant="outline" 
-                    size="icon"
-                    onClick={() => navigate(`/property/${property.id}`)}
-                  >
-                    <Eye className="h-4 w-4" />
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="icon"
-                    onClick={() => navigate(`/admin/properties/edit/${property.id}`)}
-                  >
-                    <Edit2 className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className={property.status === "available" ? "text-red-500" : "text-green-500"}
-                    onClick={() => handleStatusChange(property.id, property.status)}
-                  >
-                    <Ban className="h-4 w-4" />
-                  </Button>
-                  <Button 
-                    variant="destructive" 
-                    size="icon"
-                    onClick={() => handleDelete(property.id)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              </TableCell>
+      <div className="overflow-x-auto">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Property</TableHead>
+              <TableHead>Owner</TableHead>
+              <TableHead>Type</TableHead>
+              <TableHead>Location</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {properties?.map((property) => (
+              <TableRow key={property.id}>
+                <TableCell className="font-medium">{property.title}</TableCell>
+                <TableCell>
+                  {property.profiles?.first_name} {property.profiles?.last_name}
+                </TableCell>
+                <TableCell>{property.type}</TableCell>
+                <TableCell>{property.location}</TableCell>
+                <TableCell>
+                  <Badge
+                    variant={property.status === "available" ? "default" : "secondary"}
+                  >
+                    {property.status}
+                  </Badge>
+                </TableCell>
+                <TableCell>
+                  <div className="flex gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="icon"
+                      onClick={() => navigate(`/property/${property.id}`)}
+                    >
+                      <Eye className="h-4 w-4" />
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="icon"
+                      onClick={() => navigate(`/admin/properties/edit/${property.id}`)}
+                    >
+                      <Edit2 className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className={property.status === "available" ? "text-red-500" : "text-green-500"}
+                      onClick={() => handleStatusChange(property.id, property.status)}
+                    >
+                      <Ban className="h-4 w-4" />
+                    </Button>
+                    <Button 
+                      variant="destructive" 
+                      size="icon"
+                      onClick={() => handleDelete(property.id)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 };

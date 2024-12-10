@@ -19,14 +19,16 @@ const AddPropertyDialog = () => {
           Add New Property
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto sm:w-full w-[95%] p-4">
+      <DialogContent className="max-w-4xl h-[90vh] overflow-y-auto sm:w-[95%] p-4">
         <DialogHeader>
           <DialogTitle>Add New Property</DialogTitle>
           <DialogDescription>
             Create a new property listing. Fill in all the required information below.
           </DialogDescription>
         </DialogHeader>
-        <PropertyListingForm />
+        <div className="mt-4">
+          <PropertyListingForm />
+        </div>
       </DialogContent>
     </Dialog>
   );
