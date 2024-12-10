@@ -1,18 +1,8 @@
 import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import {
-  MapPin,
-  Home,
-  Building2,
-  Phone,
-  MessageCircle,
-  BedDouble,
-  Bath,
-  CheckCircle2,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
+import { PropertyBadges } from "./property/card/PropertyBadges";
+import { PropertyDetails } from "./property/card/PropertyDetails";
+import { PropertyActions } from "./property/card/PropertyActions";
 import type { PropertyStatus } from "@/integrations/supabase/types/enums";
 
 interface PropertyCardProps {
@@ -51,28 +41,6 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
     }
   };
 
-  const getStatusColor = (status?: PropertyStatus) => {
-    switch (status) {
-      case "available":
-        return "bg-green-500/10 text-green-500";
-      case "occupied":
-        return "bg-red-500/10 text-red-500";
-      case "maintenance":
-        return "bg-yellow-500/10 text-yellow-500";
-      case "pending":
-        return "bg-blue-500/10 text-blue-500";
-      case "rejected":
-        return "bg-red-500/10 text-red-500";
-      default:
-        return "bg-green-500/10 text-green-500";
-    }
-  };
-
-  // Only show public-facing statuses in the card
-  const shouldShowStatus = (status?: PropertyStatus) => {
-    return status === "available" || status === "occupied" || status === "maintenance";
-  };
-
   return (
     <Link to={`/property/${property.id}`}>
       <Card className="group overflow-hidden transition-all hover:shadow-lg">
@@ -82,75 +50,23 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
             alt={property.title}
             className="h-48 w-full object-cover transition-transform group-hover:scale-105"
           />
-          <div className="absolute top-4 right-4 flex gap-2">
-            <Badge variant="secondary" className="bg-white/90">
-              {property.type}
-            </Badge>
-            {property.status && shouldShowStatus(property.status) && (
-              <Badge className={cn("capitalize", getStatusColor(property.status))}>
-                {property.status}
-              </Badge>
-            )}
-          </div>
+          <PropertyBadges type={property.type} status={property.status} />
         </div>
         <div className="p-6 space-y-4">
-          <div>
-            <h3 className="text-xl font-semibold mb-2 line-clamp-1">
-              {property.title}
-            </h3>
-            <div className="flex items-center text-muted-foreground">
-              <MapPin className="h-4 w-4 mr-2" />
-              <span className="line-clamp-1">{property.location}</span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4 text-muted-foreground">
-            <div className="flex items-center">
-              <BedDouble className="h-4 w-4 mr-2" />
-              {property.bedrooms} bed
-            </div>
-            <div className="flex items-center">
-              <Bath className="h-4 w-4 mr-2" />
-              {property.bathrooms} bath
-            </div>
-          </div>
-
-          {property.amenities && (
-            <div className="flex flex-wrap gap-2">
-              {property.amenities.slice(0, 3).map((amenity, index) => (
-                <div
-                  key={index}
-                  className="flex items-center text-sm text-muted-foreground"
-                >
-                  <CheckCircle2 className="h-3 w-3 mr-1" />
-                  {amenity}
-                </div>
-              ))}
-            </div>
-          )}
-
-          <div className="flex items-center justify-between pt-2 border-t">
-            <div className="text-xl font-bold text-primary">
-              {property.price} FCFA
-            </div>
-            <div className="flex gap-2">
-              {property.whatsapp && (
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={handleWhatsApp}
-                  className="text-green-600 hover:text-green-700"
-                >
-                  <MessageCircle className="h-4 w-4" />
-                </Button>
-              )}
-              {property.phone && (
-                <Button size="sm" onClick={handleCall}>
-                  <Phone className="h-4 w-4" />
-                </Button>
-              )}
-            </div>
-          </div>
+          <PropertyDetails
+            title={property.title}
+            location={property.location}
+            bedrooms={property.bedrooms}
+            bathrooms={property.bathrooms}
+            amenities={property.amenities}
+          />
+          <PropertyActions
+            price={property.price}
+            whatsapp={property.whatsapp}
+            phone={property.phone}
+            onWhatsAppClick={handleWhatsApp}
+            onCallClick={handleCall}
+          />
         </div>
       </Card>
     </Link>

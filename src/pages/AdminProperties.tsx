@@ -21,15 +21,21 @@ const AdminProperties = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const { data: properties, isLoading } = useQuery({
+  const { data: properties, isLoading, error } = useQuery({
     queryKey: ['admin-properties'],
     queryFn: async () => {
+      console.log('Fetching properties...');
       const { data, error } = await supabase
         .from('properties')
         .select('*, profiles(first_name, last_name)')
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching properties:', error);
+        throw error;
+      }
+      
+      console.log('Properties fetched:', data);
       return data;
     }
   });
@@ -81,8 +87,16 @@ const AdminProperties = () => {
     }
   };
 
+  if (error) {
+    return (
+      <div className="p-8 text-center">
+        <p className="text-red-500">Error loading properties: {error.message}</p>
+      </div>
+    );
+  }
+
   if (isLoading) {
-    return <div className="p-8">Loading...</div>;
+    return <div className="p-8">Loading properties...</div>;
   }
 
   return (
@@ -122,7 +136,7 @@ const AdminProperties = () => {
                 <TableCell>{property.location}</TableCell>
                 <TableCell>
                   <Badge
-                    variant={property.status === "available" ? "default" : "secondary"}
+                    variant={property.status === PropertyStatus.AVAILABLE ? "default" : "secondary"}
                   >
                     {property.status}
                   </Badge>
@@ -146,7 +160,7 @@ const AdminProperties = () => {
                     <Button
                       variant="outline"
                       size="icon"
-                      className={property.status === "available" ? "text-red-500" : "text-green-500"}
+                      className={property.status === PropertyStatus.AVAILABLE ? "text-red-500" : "text-green-500"}
                       onClick={() => handleStatusChange(property.id, property.status as PropertyStatus)}
                     >
                       <Ban className="h-4 w-4" />
