@@ -56,7 +56,7 @@ const MainNav = () => {
             alt="Bayele Immo" 
             className="h-8 w-auto"
           />
-          <span className="text-xl font-bold text-bayele-500 hidden sm:inline">Bayele</span>
+          <span className="text-xl font-bold text-bayele-500 hidden sm:inline">Immo</span>
         </Link>
 
         {/* Desktop Navigation */}
@@ -126,7 +126,7 @@ const MainNav = () => {
                     alt="Bayele Immo" 
                     className="h-8 w-auto"
                   />
-                  <span className="text-xl font-bold text-bayele-500">Bayele</span>
+                  <span className="text-xl font-bold text-bayele-500">Immo</span>
                 </Link>
                 <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)}>
                   <X className="h-6 w-6" />
