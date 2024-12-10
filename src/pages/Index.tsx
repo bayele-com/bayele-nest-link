@@ -1,14 +1,11 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Search, MapPin, Home, Building2, Phone } from "lucide-react";
 import { PropertyFilters, FilterValues } from "@/components/PropertyFilters";
 import PropertyCard from "@/components/PropertyCard";
 import MainNav from "@/components/navigation/MainNav";
 import Footer from "@/components/navigation/Footer";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabase";
-import { Tables } from "@/integrations/supabase/types";
+import { supabase } from "@/integrations/supabase/client";
+import type { Tables } from "@/integrations/supabase/types";
 import type { PropertyStatus } from "@/integrations/supabase/types/enums";
 
 type Property = Tables<"properties">;
@@ -70,12 +67,14 @@ const Index = () => {
         <div
           className="absolute inset-0 z-0"
           style={{
-            backgroundImage: `url(https://images.unsplash.com/photo-1460925895917-afdab827c52f)`,
-            backgroundSize: "cover",
+            backgroundImage: `url(/lovable-uploads/c01e7f0e-e190-40b0-aa8c-7fe4d9c747ad.png)`,
+            backgroundSize: "contain",
             backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            backgroundColor: "#f8f9fa"
           }}
         >
-          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+          <div className="absolute inset-0 bg-black/30 backdrop-blur-[2px]" />
         </div>
 
         <div className="container relative z-10 mx-auto px-4 pt-16">
@@ -100,31 +99,48 @@ const Index = () => {
           <div className="text-center mb-12 animate-fade-up">
             <h2 className="text-3xl font-bold mb-4">Available Properties</h2>
             <p className="text-muted-foreground">
-              {isLoading ? "Loading properties..." : `${properties?.length || 0} properties found`}
+              {isLoading 
+                ? "Loading properties..." 
+                : properties?.length === 0 
+                  ? "No properties found matching your criteria"
+                  : `${properties?.length || 0} properties found`
+              }
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {properties?.map((property) => (
-              <PropertyCard 
-                key={property.id} 
-                property={{
-                  id: property.id,
-                  title: property.title,
-                  location: property.location,
-                  price: property.price.toString(),
-                  type: property.type,
-                  bedrooms: property.bedrooms,
-                  bathrooms: property.bathrooms,
-                  image: property.images?.[0] || "/placeholder.svg",
-                  status: property.status || "available",
-                  amenities: property.amenities || [],
-                  whatsapp: property.whatsapp,
-                  phone: property.phone,
-                }} 
-              />
-            ))}
-          </div>
+          {isLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="animate-pulse">
+                  <div className="bg-gray-200 h-64 rounded-lg mb-4"></div>
+                  <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                  <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {properties?.map((property) => (
+                <PropertyCard 
+                  key={property.id} 
+                  property={{
+                    id: property.id,
+                    title: property.title,
+                    location: property.location,
+                    price: property.price.toString(),
+                    type: property.type,
+                    bedrooms: property.bedrooms,
+                    bathrooms: property.bathrooms,
+                    image: property.images?.[0] || "/placeholder.svg",
+                    status: property.status || "available",
+                    amenities: property.amenities || [],
+                    whatsapp: property.whatsapp,
+                    phone: property.phone,
+                  }} 
+                />
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
