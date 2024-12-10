@@ -6,51 +6,11 @@ import { PropertyFilters, FilterValues } from "@/components/PropertyFilters";
 import PropertyCard from "@/components/PropertyCard";
 import MainNav from "@/components/navigation/MainNav";
 import Footer from "@/components/navigation/Footer";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { Tables } from "@/integrations/supabase/types";
 
-const properties = [
-  {
-    id: 1,
-    title: "Modern Apartment in Bastos",
-    location: "Bastos, Yaoundé",
-    price: "350,000",
-    type: "Apartment",
-    bedrooms: 3,
-    bathrooms: 2,
-    image: "https://images.unsplash.com/photo-1518005020951-eccb494ad742",
-    status: "available" as const,
-    amenities: ["Air Conditioning", "Parking", "Security"],
-    whatsapp: "237612345678",
-    phone: "237612345678",
-  },
-  {
-    id: 2,
-    title: "Luxury Villa with Pool",
-    location: "Bonanjo, Douala",
-    price: "750,000",
-    type: "Villa",
-    bedrooms: 5,
-    bathrooms: 4,
-    image: "https://images.unsplash.com/photo-1513836279014-a89f7a76ae86",
-    status: "maintenance" as const,
-    amenities: ["Pool", "Garden", "Security", "Garage"],
-    whatsapp: "237612345678",
-    phone: "237612345678",
-  },
-  {
-    id: 3,
-    title: "Cozy Studio in City Center",
-    location: "Centre, Yaoundé",
-    price: "150,000",
-    type: "Studio",
-    bedrooms: 1,
-    bathrooms: 1,
-    image: "https://images.unsplash.com/photo-1500673922987-e212871fec22",
-    status: "occupied" as const,
-    amenities: ["Furnished", "Internet", "Water Supply"],
-    whatsapp: "237612345678",
-    phone: "237612345678",
-  },
-];
+type Property = Tables<"properties">;
 
 const Index = () => {
   const [filters, setFilters] = useState<FilterValues>({
@@ -59,6 +19,41 @@ const Index = () => {
     minPrice: "",
     maxPrice: "",
     bedrooms: "",
+  });
+
+  const { data: properties, isLoading } = useQuery({
+    queryKey: ["properties", filters],
+    queryFn: async () => {
+      let query = supabase
+        .from("properties")
+        .select("*")
+        .eq("status", "available");
+
+      if (filters.city) {
+        query = query.eq("city", filters.city.toLowerCase());
+      }
+      if (filters.propertyType) {
+        query = query.eq("type", filters.propertyType.toLowerCase());
+      }
+      if (filters.minPrice) {
+        query = query.gte("price", parseFloat(filters.minPrice));
+      }
+      if (filters.maxPrice) {
+        query = query.lte("price", parseFloat(filters.maxPrice));
+      }
+      if (filters.bedrooms) {
+        query = query.eq("bedrooms", parseInt(filters.bedrooms));
+      }
+
+      const { data, error } = await query.order("created_at", { ascending: false });
+      
+      if (error) {
+        console.error("Error fetching properties:", error);
+        throw error;
+      }
+      
+      return data;
+    },
   });
 
   const handleFilterChange = (newFilters: FilterValues) => {
@@ -103,15 +98,31 @@ const Index = () => {
       <section className="py-20 bg-secondary">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12 animate-fade-up">
-            <h2 className="text-3xl font-bold mb-4">Featured Properties</h2>
+            <h2 className="text-3xl font-bold mb-4">Available Properties</h2>
             <p className="text-muted-foreground">
-              Explore our hand-picked properties
+              {isLoading ? "Loading properties..." : `${properties?.length || 0} properties found`}
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {properties.map((property) => (
-              <PropertyCard key={property.id} property={property} />
+            {properties?.map((property) => (
+              <PropertyCard 
+                key={property.id} 
+                property={{
+                  id: property.id,
+                  title: property.title,
+                  location: property.location,
+                  price: property.price.toString(),
+                  type: property.type,
+                  bedrooms: property.bedrooms,
+                  bathrooms: property.bathrooms,
+                  image: property.images?.[0] || "/placeholder.svg",
+                  status: property.status || "available",
+                  amenities: property.amenities || [],
+                  whatsapp: property.whatsapp,
+                  phone: property.phone,
+                }} 
+              />
             ))}
           </div>
         </div>

@@ -42,6 +42,80 @@ export type Database = {
         }
         Relationships: []
       }
+      properties: {
+        Row: {
+          amenities: string[] | null
+          area: number | null
+          bathrooms: number
+          bedrooms: number
+          city: Database["public"]["Enums"]["city"]
+          created_at: string | null
+          description: string
+          id: string
+          images: string[] | null
+          location: string
+          management_type: Database["public"]["Enums"]["management_type"]
+          owner_id: string
+          phone: string | null
+          price: number
+          status: Database["public"]["Enums"]["property_status"] | null
+          title: string
+          type: Database["public"]["Enums"]["property_type"]
+          updated_at: string | null
+          whatsapp: string | null
+        }
+        Insert: {
+          amenities?: string[] | null
+          area?: number | null
+          bathrooms: number
+          bedrooms: number
+          city: Database["public"]["Enums"]["city"]
+          created_at?: string | null
+          description: string
+          id?: string
+          images?: string[] | null
+          location: string
+          management_type: Database["public"]["Enums"]["management_type"]
+          owner_id: string
+          phone?: string | null
+          price: number
+          status?: Database["public"]["Enums"]["property_status"] | null
+          title: string
+          type: Database["public"]["Enums"]["property_type"]
+          updated_at?: string | null
+          whatsapp?: string | null
+        }
+        Update: {
+          amenities?: string[] | null
+          area?: number | null
+          bathrooms?: number
+          bedrooms?: number
+          city?: Database["public"]["Enums"]["city"]
+          created_at?: string | null
+          description?: string
+          id?: string
+          images?: string[] | null
+          location?: string
+          management_type?: Database["public"]["Enums"]["management_type"]
+          owner_id?: string
+          phone?: string | null
+          price?: number
+          status?: Database["public"]["Enums"]["property_status"] | null
+          title?: string
+          type?: Database["public"]["Enums"]["property_type"]
+          updated_at?: string | null
+          whatsapp?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "properties_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -50,7 +124,10 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      city: "yaounde" | "douala"
+      management_type: "self" | "bayele"
+      property_status: "available" | "occupied" | "maintenance"
+      property_type: "house" | "apartment" | "studio" | "furnished"
     }
     CompositeTypes: {
       [_ in never]: never
