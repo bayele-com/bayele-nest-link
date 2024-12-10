@@ -9,6 +9,7 @@ import Footer from "@/components/navigation/Footer";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { Tables } from "@/integrations/supabase/types";
+import type { PropertyStatus } from "@/integrations/supabase/types/enums";
 
 type Property = Tables<"properties">;
 
@@ -27,7 +28,7 @@ const Index = () => {
       let query = supabase
         .from("properties")
         .select("*")
-        .eq("status", "available");
+        .eq("status", "available" as PropertyStatus);
 
       if (filters.city) {
         query = query.eq("city", filters.city.toLowerCase());

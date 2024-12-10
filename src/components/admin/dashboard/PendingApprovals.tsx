@@ -35,7 +35,7 @@ const PendingApprovals = () => {
             last_name
           )
         `)
-        .eq('status', 'pending')
+        .eq('status', 'pending' as PropertyStatus)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
