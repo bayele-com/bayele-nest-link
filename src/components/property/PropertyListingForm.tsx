@@ -1,52 +1,28 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { PropertyType, City, ManagementType } from "@/integrations/supabase/types/enums";
-
-const propertyFormSchema = z.object({
-  title: z.string().min(5, "Title must be at least 5 characters"),
-  description: z.string().min(20, "Description must be at least 20 characters"),
-  type: z.enum(["house", "apartment", "studio", "furnished"] as const),
-  city: z.enum(["yaounde", "douala"] as const),
-  location: z.string().min(3, "Location must be at least 3 characters"),
-  price: z.string().transform(Number),
-  bedrooms: z.string().transform(Number),
-  bathrooms: z.string().transform(Number),
-  area: z.string().transform(Number).optional(),
-  management_type: z.enum(["self", "bayele"] as const),
-  phone: z.string().optional(),
-  whatsapp: z.string().optional(),
-});
+import { Form } from "@/components/ui/form";
+import { useUser } from "@supabase/auth-helpers-react";
+import { propertyFormSchema, type PropertyFormValues } from "./schemas/propertyFormSchema";
+import { BasicInfoFields } from "./form-fields/BasicInfoFields";
+import { LocationFields } from "./form-fields/LocationFields";
+import { PropertyDetailsFields } from "./form-fields/PropertyDetailsFields";
+import { ManagementFields } from "./form-fields/ManagementFields";
+import { ContactFields } from "./form-fields/ContactFields";
+import { ImageUploadFields } from "./form-fields/ImageUploadFields";
 
 const PropertyListingForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const user = useUser();
 
-  const form = useForm<z.infer<typeof propertyFormSchema>>({
+  const form = useForm<PropertyFormValues>({
     resolver: zodResolver(propertyFormSchema),
     defaultValues: {
       title: "",
@@ -54,10 +30,10 @@ const PropertyListingForm = () => {
       type: "apartment",
       city: "yaounde",
       location: "",
-      price: "",
-      bedrooms: "",
-      bathrooms: "",
-      area: "",
+      price: 0,
+      bedrooms: 0,
+      bathrooms: 0,
+      area: undefined,
       management_type: "self",
       phone: "",
       whatsapp: "",
@@ -110,7 +86,16 @@ const PropertyListingForm = () => {
     return Promise.all(uploadPromises);
   };
 
-  const onSubmit = async (data: z.infer<typeof propertyFormSchema>) => {
+  const onSubmit = async (data: PropertyFormValues) => {
+    if (!user) {
+      toast({
+        title: "Authentication required",
+        description: "Please login to submit a property",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
       setIsSubmitting(true);
 
@@ -118,7 +103,8 @@ const PropertyListingForm = () => {
         .from('properties')
         .insert({
           ...data,
-          status: 'pending',
+          owner_id: user.id,
+          status: 'pending' as const,
         })
         .select()
         .single();
@@ -156,214 +142,16 @@ const PropertyListingForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Title</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description</FormLabel>
-              <FormControl>
-                <Textarea {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField
-            control={form.control}
-            name="type"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Property Type</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select property type" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="house">House</SelectItem>
-                    <SelectItem value="apartment">Apartment</SelectItem>
-                    <SelectItem value="studio">Studio</SelectItem>
-                    <SelectItem value="furnished">Furnished</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="city"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>City</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select city" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="yaounde">Yaoundé</SelectItem>
-                    <SelectItem value="douala">Douala</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <FormField
-          control={form.control}
-          name="location"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Location</FormLabel>
-              <FormControl>
-                <Input {...field} placeholder="e.g., Bastos, Bonanjo" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <FormField
-            control={form.control}
-            name="price"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Price (FCFA)</FormLabel>
-                <FormControl>
-                  <Input {...field} type="number" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="bedrooms"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Bedrooms</FormLabel>
-                <FormControl>
-                  <Input {...field} type="number" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="bathrooms"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Bathrooms</FormLabel>
-                <FormControl>
-                  <Input {...field} type="number" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <FormField
-          control={form.control}
-          name="area"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Area (m²) - Optional</FormLabel>
-              <FormControl>
-                <Input {...field} type="number" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="management_type"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Management Type</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select management type" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="self">Self Managed</SelectItem>
-                  <SelectItem value="bayele">Bayele Manages</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField
-            control={form.control}
-            name="phone"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Phone Number (Optional)</FormLabel>
-                <FormControl>
-                  <Input {...field} type="tel" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="whatsapp"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>WhatsApp Number (Optional)</FormLabel>
-                <FormControl>
-                  <Input {...field} type="tel" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
+        <BasicInfoFields form={form} />
+        <LocationFields form={form} />
+        <PropertyDetailsFields form={form} />
+        <ManagementFields form={form} />
+        <ContactFields form={form} />
+        
         <div>
-          <FormLabel>Property Images (Max 7 images, 500KB each)</FormLabel>
-          <Input
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={handleImageChange}
-            className="mt-1"
+          <ImageUploadFields
+            handleImageChange={handleImageChange}
+            selectedImages={selectedImages}
           />
         </div>
 
