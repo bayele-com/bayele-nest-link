@@ -4,7 +4,10 @@ import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from '@/contexts/AuthContext';
 import AdminLayout from '../AdminLayout';
 import { toast } from 'sonner';
+import { supabase } from '@/lib/supabase';
+import '@testing-library/jest-dom';
 
+// Mock dependencies
 vi.mock('sonner', () => ({
   toast: {
     error: vi.fn(),
@@ -21,6 +24,10 @@ vi.mock('@/lib/supabase', () => ({
         })),
       })),
     })),
+    auth: {
+      getUser: vi.fn(),
+      signOut: vi.fn(),
+    },
   },
 }));
 

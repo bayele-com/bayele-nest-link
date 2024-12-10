@@ -5,6 +5,7 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import LoginForm from '../LoginForm';
 import { toast } from 'sonner';
 import { supabase } from '@/lib/supabase';
+import '@testing-library/jest-dom';
 
 // Mock dependencies
 vi.mock('sonner', () => ({
