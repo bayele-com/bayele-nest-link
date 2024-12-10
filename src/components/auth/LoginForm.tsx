@@ -38,21 +38,30 @@ const LoginForm = () => {
   });
 
   const onSubmit = async (data: LoginFormValues) => {
+    if (isLoading) return; // Prevent multiple submissions
+    
     setIsLoading(true);
     try {
       const { error } = await signIn(data.email, data.password);
       
       if (error) {
         toast.error("Invalid email or password");
+        setIsLoading(false);
         return;
       }
 
       // Get user profile and check role
-      const { data: profile } = await supabase
+      const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('role')
         .eq('id', (await supabase.auth.getUser()).data.user?.id)
         .single();
+
+      if (profileError) {
+        toast.error("Error fetching user profile");
+        setIsLoading(false);
+        return;
+      }
 
       toast.success("Successfully logged in!");
 
@@ -65,7 +74,6 @@ const LoginForm = () => {
     } catch (error: any) {
       console.error("Login error:", error);
       toast.error(error?.message || "An error occurred during login");
-    } finally {
       setIsLoading(false);
     }
   };
@@ -84,6 +92,7 @@ const LoginForm = () => {
                   placeholder="Enter your email" 
                   type="email"
                   autoComplete="email"
+                  disabled={isLoading}
                   {...field} 
                 />
               </FormControl>
@@ -102,6 +111,7 @@ const LoginForm = () => {
                   type="password"
                   placeholder="Enter your password"
                   autoComplete="current-password"
+                  disabled={isLoading}
                   {...field}
                 />
               </FormControl>
