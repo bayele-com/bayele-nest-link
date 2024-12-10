@@ -13,7 +13,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/components/ui/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 const registerSchema = z
   .object({
@@ -32,7 +32,7 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 
 const RegisterForm = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
+  const { signUp } = useAuth();
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
@@ -48,18 +48,9 @@ const RegisterForm = () => {
   const onSubmit = async (data: RegisterFormValues) => {
     setIsLoading(true);
     try {
-      // TODO: Implement registration logic with Supabase
-      console.log("Registration data:", data);
-      toast({
-        title: "Success",
-        description: "Account created successfully",
-      });
+      await signUp(data.email, data.password, data.firstName, data.lastName);
     } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to create account. Please try again.",
-      });
+      console.error('Registration error:', error);
     } finally {
       setIsLoading(false);
     }
