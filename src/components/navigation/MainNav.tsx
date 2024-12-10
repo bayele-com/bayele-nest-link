@@ -11,9 +11,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const MainNav = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { user } = useAuth();
 
   const MobileMenu = () => (
     <div className="flex flex-col space-y-4 p-4">
@@ -35,15 +37,23 @@ const MainNav = () => {
           List a property
         </Button>
       </Link>
-      <Link to="/auth/login" className="w-full">
-        <Button variant="outline" className="w-full gap-2">
-          <LogIn className="h-4 w-4" />
-          Log In
-        </Button>
-      </Link>
-      <Link to="/auth/register" className="w-full">
-        <Button className="w-full">Sign Up</Button>
-      </Link>
+      {!user ? (
+        <>
+          <Link to="/auth/login" className="w-full">
+            <Button variant="outline" className="w-full gap-2">
+              <LogIn className="h-4 w-4" />
+              Log In
+            </Button>
+          </Link>
+          <Link to="/auth/register" className="w-full">
+            <Button className="w-full">Sign Up</Button>
+          </Link>
+        </>
+      ) : (
+        <Link to="/admin" className="w-full">
+          <Button className="w-full">Dashboard</Button>
+        </Link>
+      )}
     </div>
   );
 
@@ -97,15 +107,23 @@ const MainNav = () => {
           </NavigationMenu>
 
           <div className="flex items-center gap-4">
-            <Link to="/auth/login">
-              <Button variant="ghost" className="gap-2">
-                <LogIn className="h-4 w-4" />
-                Log In
-              </Button>
-            </Link>
-            <Link to="/auth/register">
-              <Button>Sign Up</Button>
-            </Link>
+            {!user ? (
+              <>
+                <Link to="/auth/login">
+                  <Button variant="ghost" className="gap-2">
+                    <LogIn className="h-4 w-4" />
+                    Log In
+                  </Button>
+                </Link>
+                <Link to="/auth/register">
+                  <Button>Sign Up</Button>
+                </Link>
+              </>
+            ) : (
+              <Link to="/admin">
+                <Button>Dashboard</Button>
+              </Link>
+            )}
           </div>
         </div>
 

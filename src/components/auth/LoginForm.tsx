@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { supabase } from "@/lib/supabase";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -44,6 +45,20 @@ const LoginForm = () => {
       if (error) {
         throw error;
       }
+
+      // Check if user is admin and redirect accordingly
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', (await supabase.auth.getUser()).data.user?.id)
+        .single();
+
+      if (profile?.role === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/');
+      }
+      
     } catch (error: any) {
       console.error("Login error:", error);
       toast.error(error?.message || "Invalid email or password");

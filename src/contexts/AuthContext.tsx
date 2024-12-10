@@ -28,13 +28,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     // Listen for changes on auth state
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setUser(session?.user ?? null);
       setLoading(false);
+
+      if (session?.user) {
+        // Check user role and redirect accordingly
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', session.user.id)
+          .single();
+
+        if (profile?.role === 'admin') {
+          navigate('/admin');
+        }
+      }
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [navigate]);
 
   const signUp = async (email: string, password: string, firstName: string, lastName: string) => {
     try {
@@ -72,7 +85,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (data?.user) {
         toast.success('Successfully logged in!');
-        navigate('/');
         return { data };
       }
 
