@@ -147,7 +147,7 @@ const AdminProperties = () => {
                       variant="outline"
                       size="icon"
                       className={property.status === "available" ? "text-red-500" : "text-green-500"}
-                      onClick={() => handleStatusChange(property.id, property.status)}
+                      onClick={() => handleStatusChange(property.id, property.status as PropertyStatus)}
                     >
                       <Ban className="h-4 w-4" />
                     </Button>
