@@ -12,6 +12,7 @@ import { CheckCircle2, XCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
+import { PropertyStatus } from "@/integrations/supabase/types";
 
 const PendingApprovals = () => {
   const { toast } = useToast();
@@ -43,7 +44,7 @@ const PendingApprovals = () => {
   });
 
   const updatePropertyStatus = useMutation({
-    mutationFn: async ({ propertyId, status }: { propertyId: string, status: 'available' | 'rejected' }) => {
+    mutationFn: async ({ propertyId, status }: { propertyId: string, status: PropertyStatus }) => {
       const { error } = await supabase
         .from('properties')
         .update({ status })

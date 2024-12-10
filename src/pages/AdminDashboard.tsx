@@ -7,20 +7,20 @@ const AdminDashboard = () => {
   const { data: stats } = useQuery({
     queryKey: ['admin-stats'],
     queryFn: async () => {
-      const [propertiesCount, usersCount] = await Promise.all([
-        supabase.from('properties').count(),
-        supabase.from('profiles').count()
+      const [propertiesResponse, usersResponse] = await Promise.all([
+        supabase.from('properties').select('*', { count: 'exact', head: true }),
+        supabase.from('profiles').select('*', { count: 'exact', head: true })
       ]);
 
       const activeProperties = await supabase
         .from('properties')
-        .select('count')
+        .select('*', { count: 'exact', head: true })
         .eq('status', 'available');
 
       return {
-        totalProperties: propertiesCount.count || 0,
+        totalProperties: propertiesResponse.count || 0,
         activeListings: activeProperties.count || 0,
-        totalUsers: usersCount.count || 0,
+        totalUsers: usersResponse.count || 0,
         monthlyViews: '2.4K' // This would need a separate analytics integration
       };
     }
