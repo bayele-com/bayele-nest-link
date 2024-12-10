@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/AuthContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const loginSchema = z.object({
@@ -26,6 +26,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { signIn } = useAuth();
+  const navigate = useNavigate();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -38,17 +39,14 @@ const LoginForm = () => {
   const onSubmit = async (data: LoginFormValues) => {
     setIsLoading(true);
     try {
-      const { email, password } = data;
-      const result = await signIn(email, password);
+      const { error } = await signIn(data.email, data.password);
       
-      if (result?.error) {
-        throw new Error(result.error.message);
+      if (error) {
+        throw error;
       }
-      
-      toast.success("Successfully logged in!");
     } catch (error: any) {
       console.error("Login error:", error);
-      toast.error(error?.message || "Failed to sign in. Please check your credentials.");
+      toast.error(error?.message || "Invalid email or password");
     } finally {
       setIsLoading(false);
     }

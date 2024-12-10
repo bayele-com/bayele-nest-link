@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 interface AuthContextType {
   user: User | null;
   loading: boolean;
-  signIn: (email: string, password: string) => Promise<any>;
+  signIn: (email: string, password: string) => Promise<{ data?: any; error?: Error }>;
   signUp: (email: string, password: string, firstName: string, lastName: string) => Promise<void>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
@@ -66,16 +66,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         password,
       });
 
-      if (error) throw error;
-      
-      if (data.user) {
+      if (error) {
+        return { error: new Error(error.message) };
+      }
+
+      if (data?.user) {
+        toast.success('Successfully logged in!');
         navigate('/');
         return { data };
       }
-      
+
       return { error: new Error('No user data returned') };
     } catch (error: any) {
-      return { error };
+      return { error: new Error(error.message) };
     }
   };
 
@@ -84,6 +87,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
       
+      toast.success('Successfully logged out!');
       navigate('/auth/login');
     } catch (error: any) {
       toast.error(error.message || 'Error signing out.');
