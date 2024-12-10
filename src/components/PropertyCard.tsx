@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 
 interface PropertyCardProps {
   property: {
-    id: number;
+    id: string; // Changed from number to string to match UUID from Supabase
     title: string;
     location: string;
     price: string;
