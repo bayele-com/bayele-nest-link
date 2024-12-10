@@ -19,11 +19,18 @@ const AdminLayout = () => {
         return;
       }
 
-      const { data: profile } = await supabase
+      const { data: profile, error } = await supabase
         .from("profiles")
         .select("role")
         .eq("id", user.id)
         .single();
+
+      if (error) {
+        console.error("Error fetching profile:", error);
+        toast.error("Error checking admin access");
+        navigate("/");
+        return;
+      }
 
       if (!profile || profile.role !== "admin") {
         toast.error("You don't have permission to access this area");

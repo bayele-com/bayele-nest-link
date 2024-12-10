@@ -39,6 +39,13 @@ const AdminNav = () => {
 
   if (!user) return null;
 
+  const isActive = (path: string) => {
+    if (path === '/admin') {
+      return location.pathname === path;
+    }
+    return location.pathname.startsWith(path);
+  };
+
   return (
     <NavigationMenu className="max-w-none w-full justify-start">
       <NavigationMenuList className="space-x-2">
@@ -49,7 +56,7 @@ const AdminNav = () => {
                 className={cn(
                   navigationMenuTriggerStyle(),
                   "flex items-center gap-2",
-                  location.pathname === item.href &&
+                  isActive(item.href) &&
                     "bg-accent text-accent-foreground"
                 )}
               >

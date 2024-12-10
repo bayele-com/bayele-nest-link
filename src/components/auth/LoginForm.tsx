@@ -43,15 +43,18 @@ const LoginForm = () => {
       const { error } = await signIn(data.email, data.password);
       
       if (error) {
-        throw error;
+        toast.error("Invalid email or password");
+        return;
       }
 
-      // Check if user is admin and redirect accordingly
+      // Get user profile and check role
       const { data: profile } = await supabase
         .from('profiles')
         .select('role')
         .eq('id', (await supabase.auth.getUser()).data.user?.id)
         .single();
+
+      toast.success("Successfully logged in!");
 
       if (profile?.role === 'admin') {
         navigate('/admin');
@@ -61,7 +64,7 @@ const LoginForm = () => {
       
     } catch (error: any) {
       console.error("Login error:", error);
-      toast.error(error?.message || "Invalid email or password");
+      toast.error(error?.message || "An error occurred during login");
     } finally {
       setIsLoading(false);
     }
