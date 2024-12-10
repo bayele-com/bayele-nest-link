@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { supabase } from '@/lib/supabase';
 import '@testing-library/jest-dom';
 import { PostgrestFilterBuilder } from '@supabase/postgrest-js';
+import { Database } from '@/integrations/supabase/types';
 
 // Mock dependencies
 vi.mock('sonner', () => ({
@@ -22,7 +23,7 @@ vi.mock('@/lib/supabase', () => ({
       select: vi.fn(() => ({
         eq: vi.fn(() => ({
           single: vi.fn(),
-        })) as unknown as PostgrestFilterBuilder<any>,
+        })) as unknown as PostgrestFilterBuilder<Database['public'], Database['public']['Tables']['profiles']['Row'], Database['public']['Tables']['profiles']['Row']>,
       })),
     })),
     auth: {
