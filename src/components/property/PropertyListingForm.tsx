@@ -14,7 +14,7 @@ import { PropertyDetailsFields } from "./form-fields/PropertyDetailsFields";
 import { ManagementFields } from "./form-fields/ManagementFields";
 import { ContactFields } from "./form-fields/ContactFields";
 import { ImageUploadFields } from "./form-fields/ImageUploadFields";
-import { PropertyType, City, ManagementType } from "@/integrations/supabase/types/enums";
+import { PropertyType, City, ManagementType, PropertyStatus } from "@/integrations/supabase/types/enums";
 
 const PropertyListingForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -100,13 +100,15 @@ const PropertyListingForm = () => {
     try {
       setIsSubmitting(true);
 
+      const propertyData = {
+        ...data,
+        owner_id: user.id,
+        status: PropertyStatus.PENDING,
+      };
+
       const { data: property, error: insertError } = await supabase
         .from('properties')
-        .insert({
-          ...data,
-          owner_id: user.id,
-          status: 'pending',
-        })
+        .insert(propertyData)
         .select()
         .single();
 

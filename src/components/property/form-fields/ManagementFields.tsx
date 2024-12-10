@@ -7,21 +7,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { UseFormReturn } from "react-hook-form";
-import * as z from "zod";
+import { PropertyFormValues } from "../schemas/propertyFormSchema";
+import { ManagementType } from "@/integrations/supabase/types/enums";
 
 interface ManagementFieldsProps {
-  form: UseFormReturn<z.infer<typeof formSchema>>;
+  form: UseFormReturn<PropertyFormValues>;
 }
-
-const formSchema = z.object({
-  managementType: z.string().min(1, "Management type is required"),
-});
 
 export const ManagementFields = ({ form }: ManagementFieldsProps) => {
   return (
     <FormField
       control={form.control}
-      name="managementType"
+      name="management_type"
       render={({ field }) => (
         <FormItem>
           <FormLabel>Management Type</FormLabel>
@@ -32,8 +29,11 @@ export const ManagementFields = ({ form }: ManagementFieldsProps) => {
               </SelectTrigger>
             </FormControl>
             <SelectContent>
-              <SelectItem value="self">Self Managed</SelectItem>
-              <SelectItem value="bayele">Bayele Manages</SelectItem>
+              {Object.entries(ManagementType).map(([key, value]) => (
+                <SelectItem key={value} value={value}>
+                  {key === 'SELF' ? 'Self Managed' : 'Bayele Manages'}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
           <FormMessage />
