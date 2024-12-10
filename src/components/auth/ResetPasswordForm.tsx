@@ -12,78 +12,66 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/components/ui/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 import { Link } from "react-router-dom";
 
-const resetSchema = z.object({
+const resetPasswordSchema = z.object({
   email: z.string().email("Invalid email address"),
 });
 
-type ResetFormValues = z.infer<typeof resetSchema>;
+type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;
 
 const ResetPasswordForm = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
+  const { resetPassword } = useAuth();
 
-  const form = useForm<ResetFormValues>({
-    resolver: zodResolver(resetSchema),
+  const form = useForm<ResetPasswordFormValues>({
+    resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
       email: "",
     },
   });
 
-  const onSubmit = async (data: ResetFormValues) => {
+  const onSubmit = async (data: ResetPasswordFormValues) => {
     setIsLoading(true);
     try {
-      // TODO: Implement password reset logic with Supabase
-      console.log("Reset password for:", data.email);
-      toast({
-        title: "Check your email",
-        description: "If an account exists, you'll receive a reset link",
-      });
+      await resetPassword(data.email);
     } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to send reset link. Please try again.",
-      });
+      console.error('Reset password error:', error);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="grid gap-6">
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input
-                    type="email"
-                    placeholder="name@example.com"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? "Sending..." : "Send Reset Link"}
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter your email" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <div className="flex flex-col space-y-4">
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? "Sending reset link..." : "Send reset link"}
           </Button>
-        </form>
-      </Form>
-      <div className="text-center text-sm">
-        <Link to="/auth/login" className="text-primary hover:underline">
-          Back to login
-        </Link>
-      </div>
-    </div>
+          <p className="text-sm text-center text-muted-foreground">
+            Remember your password?{" "}
+            <Link to="/auth/login" className="text-primary hover:underline">
+              Sign in
+            </Link>
+          </p>
+        </div>
+      </form>
+    </Form>
   );
 };
 
