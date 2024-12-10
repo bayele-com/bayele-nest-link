@@ -67,14 +67,13 @@ const Index = () => {
         <div
           className="absolute inset-0 z-0"
           style={{
-            backgroundImage: `url(/lovable-uploads/c01e7f0e-e190-40b0-aa8c-7fe4d9c747ad.png)`,
-            backgroundSize: "contain",
+            backgroundImage: `url(/lovable-uploads/1da0aa42-0ea2-4130-8a3b-7499a0175ad8.png)`,
+            backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
-            backgroundColor: "#f8f9fa"
           }}
         >
-          <div className="absolute inset-0 bg-black/30 backdrop-blur-[2px]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/70 backdrop-blur-[2px]" />
         </div>
 
         <div className="container relative z-10 mx-auto px-4 pt-16">
