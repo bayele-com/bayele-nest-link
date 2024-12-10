@@ -10,55 +10,93 @@ import {
 } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
 import { Edit2, Lock, Trash2, Unlock } from "lucide-react";
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  role: string;
-  status: string;
-  properties: number;
-  joinedAt: string;
-}
-
-const mockUsers = [
-  {
-    id: 1,
-    name: "John Doe",
-    email: "john@example.com",
-    role: "owner",
-    status: "active",
-    properties: 3,
-    joinedAt: "2024-02-15",
-  },
-  {
-    id: 2,
-    name: "Jane Smith",
-    email: "jane@example.com",
-    role: "admin",
-    status: "active",
-    properties: 0,
-    joinedAt: "2024-03-01",
-  },
-];
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
 
 const UsersTable = () => {
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
-  const handleStatusChange = (userId: number, newStatus: string) => {
-    toast({
-      title: `User ${newStatus === 'active' ? 'Activated' : 'Deactivated'}`,
-      description: `User status has been updated to ${newStatus}.`,
+  const { data: users, isLoading } = useQuery({
+    queryKey: ['admin-users'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      return data;
+    }
+  });
+
+  const updateUserMutation = useMutation({
+    mutationFn: async ({ userId, updates }: { userId: string, updates: any }) => {
+      const { error } = await supabase
+        .from('profiles')
+        .update(updates)
+        .eq('id', userId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-users'] });
+      toast({
+        title: "User updated",
+        description: "User has been updated successfully.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "Failed to update user.",
+        variant: "destructive",
+      });
+      console.error('Update error:', error);
+    }
+  });
+
+  const deleteUserMutation = useMutation({
+    mutationFn: async (userId: string) => {
+      const { error } = await supabase
+        .from('profiles')
+        .delete()
+        .eq('id', userId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-users'] });
+      toast({
+        title: "User deleted",
+        description: "User has been deleted successfully.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "Failed to delete user.",
+        variant: "destructive",
+      });
+      console.error('Delete error:', error);
+    }
+  });
+
+  const handleStatusChange = (userId: string, currentStatus: string) => {
+    const newStatus = currentStatus === "active" ? "inactive" : "active";
+    updateUserMutation.mutate({ 
+      userId, 
+      updates: { status: newStatus }
     });
   };
 
-  const handleDelete = (userId: number) => {
-    toast({
-      title: "User deleted",
-      description: "User has been deleted successfully.",
-      variant: "destructive",
-    });
+  const handleDelete = (userId: string) => {
+    if (window.confirm('Are you sure you want to delete this user?')) {
+      deleteUserMutation.mutate(userId);
+    }
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Table>
@@ -68,15 +106,16 @@ const UsersTable = () => {
           <TableHead>Email</TableHead>
           <TableHead>Role</TableHead>
           <TableHead>Status</TableHead>
-          <TableHead>Properties</TableHead>
           <TableHead>Joined</TableHead>
           <TableHead>Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {mockUsers.map((user) => (
+        {users?.map((user) => (
           <TableRow key={user.id}>
-            <TableCell className="font-medium">{user.name}</TableCell>
+            <TableCell className="font-medium">
+              {user.first_name} {user.last_name}
+            </TableCell>
             <TableCell>{user.email}</TableCell>
             <TableCell>
               <Badge variant="outline">{user.role}</Badge>
@@ -85,11 +124,12 @@ const UsersTable = () => {
               <Badge
                 variant={user.status === "active" ? "default" : "secondary"}
               >
-                {user.status}
+                {user.status || 'active'}
               </Badge>
             </TableCell>
-            <TableCell>{user.properties}</TableCell>
-            <TableCell>{user.joinedAt}</TableCell>
+            <TableCell>
+              {new Date(user.created_at).toLocaleDateString()}
+            </TableCell>
             <TableCell>
               <div className="flex gap-2">
                 <Button variant="outline" size="icon">
@@ -99,7 +139,7 @@ const UsersTable = () => {
                   variant="outline"
                   size="icon"
                   className={user.status === "active" ? "text-red-500" : "text-green-500"}
-                  onClick={() => handleStatusChange(user.id, user.status === "active" ? "inactive" : "active")}
+                  onClick={() => handleStatusChange(user.id, user.status)}
                 >
                   {user.status === "active" ? (
                     <Lock className="h-4 w-4" />
