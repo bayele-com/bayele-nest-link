@@ -14,6 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -37,9 +38,17 @@ const LoginForm = () => {
   const onSubmit = async (data: LoginFormValues) => {
     setIsLoading(true);
     try {
-      await signIn(data.email, data.password);
-    } catch (error) {
-      console.error('Login error:', error);
+      const { email, password } = data;
+      const result = await signIn(email, password);
+      
+      if (result?.error) {
+        throw new Error(result.error.message);
+      }
+      
+      toast.success("Successfully logged in!");
+    } catch (error: any) {
+      console.error("Login error:", error);
+      toast.error(error?.message || "Failed to sign in. Please check your credentials.");
     } finally {
       setIsLoading(false);
     }
@@ -55,7 +64,12 @@ const LoginForm = () => {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="Enter your email" {...field} />
+                <Input 
+                  placeholder="Enter your email" 
+                  type="email"
+                  autoComplete="email"
+                  {...field} 
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -71,6 +85,7 @@ const LoginForm = () => {
                 <Input
                   type="password"
                   placeholder="Enter your password"
+                  autoComplete="current-password"
                   {...field}
                 />
               </FormControl>

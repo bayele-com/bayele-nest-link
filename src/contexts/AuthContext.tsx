@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 interface AuthContextType {
   user: User | null;
   loading: boolean;
-  signIn: (email: string, password: string) => Promise<void>;
+  signIn: (email: string, password: string) => Promise<any>;
   signUp: (email: string, password: string, firstName: string, lastName: string) => Promise<void>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
@@ -53,26 +53,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       toast.success('Registration successful! Please check your email to verify your account.');
       navigate('/auth/login');
-    } catch (error) {
-      toast.error('Error during registration. Please try again.');
+    } catch (error: any) {
+      toast.error(error.message || 'Error during registration. Please try again.');
       throw error;
     }
   };
 
   const signIn = async (email: string, password: string) => {
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) throw error;
       
-      toast.success('Successfully logged in!');
-      navigate('/');
-    } catch (error) {
-      toast.error('Error logging in. Please check your credentials.');
-      throw error;
+      if (data.user) {
+        navigate('/');
+        return { data };
+      }
+      
+      return { error: new Error('No user data returned') };
+    } catch (error: any) {
+      return { error };
     }
   };
 
@@ -81,10 +84,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
       
-      toast.success('Successfully logged out!');
       navigate('/auth/login');
-    } catch (error) {
-      toast.error('Error signing out.');
+    } catch (error: any) {
+      toast.error(error.message || 'Error signing out.');
       throw error;
     }
   };
@@ -98,8 +100,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (error) throw error;
       
       toast.success('Password reset instructions have been sent to your email.');
-    } catch (error) {
-      toast.error('Error sending reset password instructions.');
+    } catch (error: any) {
+      toast.error(error.message || 'Error sending reset password instructions.');
       throw error;
     }
   };
