@@ -53,11 +53,13 @@ export type Database = {
           description: string
           id: string
           images: string[] | null
+          is_featured: boolean | null
           location: string
           management_type: Database["public"]["Enums"]["management_type"]
           owner_id: string
           phone: string | null
           price: number
+          rejection_reason: string | null
           status: Database["public"]["Enums"]["property_status"] | null
           title: string
           type: Database["public"]["Enums"]["property_type"]
@@ -74,11 +76,13 @@ export type Database = {
           description: string
           id?: string
           images?: string[] | null
+          is_featured?: boolean | null
           location: string
           management_type: Database["public"]["Enums"]["management_type"]
           owner_id: string
           phone?: string | null
           price: number
+          rejection_reason?: string | null
           status?: Database["public"]["Enums"]["property_status"] | null
           title: string
           type: Database["public"]["Enums"]["property_type"]
@@ -95,11 +99,13 @@ export type Database = {
           description?: string
           id?: string
           images?: string[] | null
+          is_featured?: boolean | null
           location?: string
           management_type?: Database["public"]["Enums"]["management_type"]
           owner_id?: string
           phone?: string | null
           price?: number
+          rejection_reason?: string | null
           status?: Database["public"]["Enums"]["property_status"] | null
           title?: string
           type?: Database["public"]["Enums"]["property_type"]
@@ -112,6 +118,55 @@ export type Database = {
             columns: ["owner_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      property_status_history: {
+        Row: {
+          changed_by: string | null
+          created_at: string | null
+          id: string
+          new_status: Database["public"]["Enums"]["property_status"] | null
+          previous_status: Database["public"]["Enums"]["property_status"] | null
+          property_id: string | null
+          reason: string | null
+        }
+        Insert: {
+          changed_by?: string | null
+          created_at?: string | null
+          id?: string
+          new_status?: Database["public"]["Enums"]["property_status"] | null
+          previous_status?:
+            | Database["public"]["Enums"]["property_status"]
+            | null
+          property_id?: string | null
+          reason?: string | null
+        }
+        Update: {
+          changed_by?: string | null
+          created_at?: string | null
+          id?: string
+          new_status?: Database["public"]["Enums"]["property_status"] | null
+          previous_status?:
+            | Database["public"]["Enums"]["property_status"]
+            | null
+          property_id?: string | null
+          reason?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "property_status_history_changed_by_fkey"
+            columns: ["changed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "property_status_history_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
             referencedColumns: ["id"]
           },
         ]
@@ -131,7 +186,12 @@ export type Database = {
     Enums: {
       city: "yaounde" | "douala"
       management_type: "self" | "bayele"
-      property_status: "available" | "occupied" | "maintenance" | "rejected"
+      property_status:
+        | "available"
+        | "occupied"
+        | "maintenance"
+        | "rejected"
+        | "pending"
       property_type: "house" | "apartment" | "studio" | "furnished"
     }
     CompositeTypes: {
