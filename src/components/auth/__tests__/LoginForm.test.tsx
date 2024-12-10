@@ -1,9 +1,10 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { vi } from 'vitest';
+import { describe, it, vi, beforeEach, expect } from 'vitest';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from '@/contexts/AuthContext';
 import LoginForm from '../LoginForm';
 import { toast } from 'sonner';
+import { supabase } from '@/lib/supabase';
 
 // Mock dependencies
 vi.mock('sonner', () => ({

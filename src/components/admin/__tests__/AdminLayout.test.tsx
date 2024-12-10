@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react';
-import { vi } from 'vitest';
+import { describe, it, vi, beforeEach, expect } from 'vitest';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from '@/contexts/AuthContext';
 import AdminLayout from '../AdminLayout';
