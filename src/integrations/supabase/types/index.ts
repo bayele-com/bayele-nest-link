@@ -1,3 +1,7 @@
+import { Profile, ProfileInsert, ProfileUpdate } from './profiles';
+import { Property, PropertyInsert, PropertyUpdate } from './properties';
+import { City, ManagementType, PropertyStatus, PropertyType } from './enums';
+
 export * from './enums';
 export * from './profiles';
 export * from './properties';

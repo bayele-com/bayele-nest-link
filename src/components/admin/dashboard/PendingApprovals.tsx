@@ -12,7 +12,7 @@ import { CheckCircle2, XCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
-import { PropertyStatus } from "@/integrations/supabase/types";
+import type { PropertyStatus } from "@/integrations/supabase/types/enums";
 
 const PendingApprovals = () => {
   const { toast } = useToast();

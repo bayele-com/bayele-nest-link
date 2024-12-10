@@ -131,7 +131,7 @@ export type Database = {
     Enums: {
       city: "yaounde" | "douala"
       management_type: "self" | "bayele"
-      property_status: "available" | "occupied" | "maintenance"
+      property_status: "available" | "occupied" | "maintenance" | "rejected"
       property_type: "house" | "apartment" | "studio" | "furnished"
     }
     CompositeTypes: {
