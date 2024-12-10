@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 const adminNavItems = [
   {
@@ -34,6 +35,9 @@ const adminNavItems = [
 
 const AdminNav = () => {
   const location = useLocation();
+  const { user } = useAuth();
+
+  if (!user) return null;
 
   return (
     <NavigationMenu className="max-w-none w-full justify-start">
