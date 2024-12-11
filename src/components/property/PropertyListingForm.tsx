@@ -94,7 +94,18 @@ const PropertyListingForm = () => {
       setIsSubmitting(true);
 
       const propertyData: TablesInsert<"properties"> = {
-        ...data,
+        title: data.title,
+        description: data.description,
+        type: data.type,
+        city: data.city,
+        location: data.location,
+        price: data.price,
+        bedrooms: data.bedrooms,
+        bathrooms: data.bathrooms,
+        area: data.area,
+        management_type: data.management_type,
+        phone: data.phone || null,
+        whatsapp: data.whatsapp || null,
         owner_id: user?.id || null,
         status: PropertyStatus.PENDING,
         amenities: [],
