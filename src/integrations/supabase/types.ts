@@ -56,7 +56,7 @@ export type Database = {
           is_featured: boolean | null
           location: string
           management_type: Database["public"]["Enums"]["management_type"]
-          owner_id: string
+          owner_id: string | null
           phone: string | null
           price: number
           rejection_reason: string | null
@@ -79,7 +79,7 @@ export type Database = {
           is_featured?: boolean | null
           location: string
           management_type: Database["public"]["Enums"]["management_type"]
-          owner_id: string
+          owner_id?: string | null
           phone?: string | null
           price: number
           rejection_reason?: string | null
@@ -102,7 +102,7 @@ export type Database = {
           is_featured?: boolean | null
           location?: string
           management_type?: Database["public"]["Enums"]["management_type"]
-          owner_id?: string
+          owner_id?: string | null
           phone?: string | null
           price?: number
           rejection_reason?: string | null

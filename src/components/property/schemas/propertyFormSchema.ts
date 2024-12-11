@@ -1,4 +1,4 @@
-import * as z from "zod";
+import { z } from "zod";
 import { PropertyType, City, ManagementType } from "@/integrations/supabase/types/enums";
 
 export const propertyFormSchema = z.object({

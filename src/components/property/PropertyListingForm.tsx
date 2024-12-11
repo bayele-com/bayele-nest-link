@@ -14,7 +14,8 @@ import { PropertyDetailsFields } from "./form-fields/PropertyDetailsFields";
 import { ManagementFields } from "./form-fields/ManagementFields";
 import { ContactFields } from "./form-fields/ContactFields";
 import { ImageUploadFields } from "./form-fields/ImageUploadFields";
-import { PropertyStatus } from "@/integrations/supabase/types/enums";
+import { PropertyStatus, PropertyType, City, ManagementType } from "@/integrations/supabase/types/enums";
+import type { PropertyFormValues } from "./schemas/propertyFormSchema";
 
 const PropertyListingForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -23,19 +24,19 @@ const PropertyListingForm = () => {
   const navigate = useNavigate();
   const user = useUser();
 
-  const form = useForm({
+  const form = useForm<PropertyFormValues>({
     resolver: zodResolver(propertyFormSchema),
     defaultValues: {
       title: "",
       description: "",
-      type: "APARTMENT",
-      city: "YAOUNDE",
+      type: PropertyType.APARTMENT,
+      city: City.YAOUNDE,
       location: "",
       price: 0,
       bedrooms: 1,
       bathrooms: 1,
       area: undefined,
-      management_type: "SELF",
+      management_type: ManagementType.SELF,
       phone: "",
       whatsapp: "",
     },
@@ -87,14 +88,14 @@ const PropertyListingForm = () => {
     return Promise.all(uploadPromises);
   };
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: PropertyFormValues) => {
     try {
       setIsSubmitting(true);
 
       const propertyData = {
         ...data,
         owner_id: user?.id || null,
-        status: user?.id ? PropertyStatus.PENDING : PropertyStatus.PENDING,
+        status: PropertyStatus.PENDING,
         amenities: [],
       };
 
@@ -128,7 +129,7 @@ const PropertyListingForm = () => {
       } else {
         navigate("/auth/register");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error submitting property:', error);
       toast({
         title: "Error",
