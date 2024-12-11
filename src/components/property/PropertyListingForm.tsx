@@ -16,6 +16,7 @@ import { ContactFields } from "./form-fields/ContactFields";
 import { ImageUploadFields } from "./form-fields/ImageUploadFields";
 import { PropertyStatus, PropertyType, City, ManagementType } from "@/integrations/supabase/types/enums";
 import type { PropertyFormValues } from "./schemas/propertyFormSchema";
+import type { TablesInsert } from "@/integrations/supabase/types";
 
 const PropertyListingForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -92,11 +93,13 @@ const PropertyListingForm = () => {
     try {
       setIsSubmitting(true);
 
-      const propertyData = {
+      const propertyData: TablesInsert<"properties"> = {
         ...data,
         owner_id: user?.id || null,
         status: PropertyStatus.PENDING,
         amenities: [],
+        images: [],
+        is_featured: false,
       };
 
       const { data: property, error: insertError } = await supabase
