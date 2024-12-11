@@ -1,18 +1,8 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { CheckCircle2, XCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import type { PropertyStatus } from "@/integrations/supabase/types/enums";
+import { ApprovalsTable } from "./ApprovalsTable";
 
 const PendingApprovals = () => {
   const { toast } = useToast();
@@ -97,55 +87,11 @@ const PendingApprovals = () => {
   return (
     <div>
       <h2 className="text-2xl font-semibold mb-4">Pending Approvals</h2>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Property</TableHead>
-            <TableHead>Owner</TableHead>
-            <TableHead>Type</TableHead>
-            <TableHead>Location</TableHead>
-            <TableHead>Submitted</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {properties?.map((property) => (
-            <TableRow key={property.id}>
-              <TableCell className="font-medium">{property.title}</TableCell>
-              <TableCell>
-                {property.profiles.first_name} {property.profiles.last_name}
-              </TableCell>
-              <TableCell>{property.type}</TableCell>
-              <TableCell>{property.location}</TableCell>
-              <TableCell>{new Date(property.created_at).toLocaleDateString()}</TableCell>
-              <TableCell>
-                <Badge variant="secondary">
-                  {property.status}
-                </Badge>
-              </TableCell>
-              <TableCell>
-                <div className="flex gap-2">
-                  <Button 
-                    variant="outline" 
-                    size="icon"
-                    onClick={() => handleApprove(property.id)}
-                  >
-                    <CheckCircle2 className="h-4 w-4 text-green-500" />
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="icon"
-                    onClick={() => handleReject(property.id)}
-                  >
-                    <XCircle className="h-4 w-4 text-red-500" />
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <ApprovalsTable
+        properties={properties || []}
+        onApprove={handleApprove}
+        onReject={handleReject}
+      />
     </div>
   );
 };

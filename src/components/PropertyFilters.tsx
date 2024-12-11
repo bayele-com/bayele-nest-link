@@ -1,14 +1,10 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { MapPin, Home, Building2, Search } from "lucide-react";
+import { Search } from "lucide-react";
+import { CitySelect } from "./property/filters/CitySelect";
+import { PropertyTypeSelect } from "./property/filters/PropertyTypeSelect";
+import { BedroomsSelect } from "./property/filters/BedroomsSelect";
+import { PriceInputs } from "./property/filters/PriceInputs";
 
 export type FilterValues = {
   city: string;
@@ -40,73 +36,24 @@ export function PropertyFilters({ onFilterChange }: PropertyFiltersProps) {
   return (
     <div className="glass-card p-4 rounded-2xl space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-        <Select
+        <CitySelect
           value={filters.city}
-          onValueChange={(value) => handleFilterChange("city", value)}
-        >
-          <SelectTrigger>
-            <div className="flex items-center">
-              <MapPin className="mr-2 h-4 w-4" />
-              <SelectValue placeholder="Select City" />
-            </div>
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="yaounde">Yaoundé</SelectItem>
-            <SelectItem value="douala">Douala</SelectItem>
-          </SelectContent>
-        </Select>
-
-        <Select
+          onChange={(value) => handleFilterChange("city", value)}
+        />
+        <PropertyTypeSelect
           value={filters.propertyType}
-          onValueChange={(value) => handleFilterChange("propertyType", value)}
-        >
-          <SelectTrigger>
-            <div className="flex items-center">
-              <Building2 className="mr-2 h-4 w-4" />
-              <SelectValue placeholder="Property Type" />
-            </div>
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="house">House</SelectItem>
-            <SelectItem value="apartment">Apartment</SelectItem>
-            <SelectItem value="studio">Studio</SelectItem>
-            <SelectItem value="furnished">Furnished Apartment</SelectItem>
-          </SelectContent>
-        </Select>
-
-        <Input
-          type="number"
-          placeholder="Min Price (FCFA)"
-          value={filters.minPrice}
-          onChange={(e) => handleFilterChange("minPrice", e.target.value)}
-          className="w-full"
+          onChange={(value) => handleFilterChange("propertyType", value)}
         />
-
-        <Input
-          type="number"
-          placeholder="Max Price (FCFA)"
-          value={filters.maxPrice}
-          onChange={(e) => handleFilterChange("maxPrice", e.target.value)}
-          className="w-full"
+        <PriceInputs
+          minPrice={filters.minPrice}
+          maxPrice={filters.maxPrice}
+          onMinPriceChange={(value) => handleFilterChange("minPrice", value)}
+          onMaxPriceChange={(value) => handleFilterChange("maxPrice", value)}
         />
-
-        <Select
+        <BedroomsSelect
           value={filters.bedrooms}
-          onValueChange={(value) => handleFilterChange("bedrooms", value)}
-        >
-          <SelectTrigger>
-            <div className="flex items-center">
-              <Home className="mr-2 h-4 w-4" />
-              <SelectValue placeholder="Bedrooms" />
-            </div>
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="1">1 Bedroom</SelectItem>
-            <SelectItem value="2">2 Bedrooms</SelectItem>
-            <SelectItem value="3">3 Bedrooms</SelectItem>
-            <SelectItem value="4">4+ Bedrooms</SelectItem>
-          </SelectContent>
-        </Select>
+          onChange={(value) => handleFilterChange("bedrooms", value)}
+        />
       </div>
 
       <div className="flex justify-end">
