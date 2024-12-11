@@ -38,14 +38,7 @@ const AppRoutes = () => {
     <Routes>
       <Route path="/" element={<Index />} />
       <Route path="/property/:id" element={<PropertyDetail />} />
-      <Route 
-        path="/manage" 
-        element={
-          <ProtectedRoute>
-            <PropertyManagement />
-          </ProtectedRoute>
-        } 
-      />
+      <Route path="/manage" element={<PropertyManagement />} />
       <Route path="/auth/login" element={<LoginPage />} />
       <Route path="/auth/register" element={<RegisterPage />} />
       <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
