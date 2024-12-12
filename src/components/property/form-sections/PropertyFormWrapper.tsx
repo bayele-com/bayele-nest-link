@@ -33,8 +33,15 @@ export const PropertyFormWrapper = () => {
 
   const onSubmit = async (data: PropertyFormValues, images: File[]) => {
     console.log('Form submitted with data:', data);
+    console.log('Images to upload:', images);
+    
     try {
       await submitProperty(data, images);
+      toast({
+        title: "Success",
+        description: "Property submitted successfully",
+      });
+      form.reset(); // Reset form after successful submission
     } catch (error: any) {
       console.error('Form submission error:', error);
       toast({

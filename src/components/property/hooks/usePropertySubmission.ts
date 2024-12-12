@@ -15,17 +15,19 @@ export const usePropertySubmission = () => {
 
   const uploadImages = async (propertyId: string, images: File[]) => {
     console.log('Starting image upload for property:', propertyId);
-    const uploadPromises = images.map(async (file) => {
+    console.log('Number of images to upload:', images.length);
+    
+    const uploadPromises = images.map(async (file, index) => {
       const fileExt = file.name.split('.').pop();
       const fileName = `${propertyId}/${Math.random()}.${fileExt}`;
       
-      console.log('Uploading image:', fileName);
+      console.log(`Uploading image ${index + 1}/${images.length}:`, fileName);
       const { error: uploadError, data } = await supabase.storage
         .from('property-images')
         .upload(fileName, file);
 
       if (uploadError) {
-        console.error('Image upload error:', uploadError);
+        console.error(`Image ${index + 1} upload error:`, uploadError);
         throw uploadError;
       }
 
@@ -33,7 +35,7 @@ export const usePropertySubmission = () => {
         .from('property-images')
         .getPublicUrl(fileName);
 
-      console.log('Image uploaded successfully:', publicUrl);
+      console.log(`Image ${index + 1} uploaded successfully:`, publicUrl);
       return publicUrl;
     });
 
@@ -42,6 +44,8 @@ export const usePropertySubmission = () => {
 
   const handleSubmit = async (data: PropertyFormValues, selectedImages: File[]) => {
     console.log('Starting property submission with data:', data);
+    console.log('Number of images selected:', selectedImages.length);
+    
     try {
       setIsSubmitting(true);
 
@@ -80,7 +84,7 @@ export const usePropertySubmission = () => {
       console.log('Property inserted successfully:', property);
 
       if (selectedImages.length > 0) {
-        console.log('Uploading property images...');
+        console.log('Starting image upload process...');
         const imageUrls = await uploadImages(property.id, selectedImages);
         
         const { error: updateError } = await supabase
@@ -109,11 +113,7 @@ export const usePropertySubmission = () => {
       }
     } catch (error: any) {
       console.error('Error submitting property:', error);
-      toast({
-        title: "Error",
-        description: error.message || "Failed to submit property. Please try again.",
-        variant: "destructive",
-      });
+      throw error;
     } finally {
       setIsSubmitting(false);
     }
