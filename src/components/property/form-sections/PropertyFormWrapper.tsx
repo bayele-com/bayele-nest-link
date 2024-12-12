@@ -10,7 +10,7 @@ import type { PropertyFormValues } from "../schemas/propertyFormSchema";
 import { useToast } from "@/hooks/use-toast";
 
 export const PropertyFormWrapper = () => {
-  const { isSubmitting, handleSubmit } = usePropertySubmission();
+  const { isSubmitting, handleSubmit: submitProperty } = usePropertySubmission();
   const { toast } = useToast();
 
   const form = useForm<PropertyFormValues>({
@@ -31,10 +31,10 @@ export const PropertyFormWrapper = () => {
     },
   });
 
-  const onSubmit = async (data: PropertyFormValues) => {
+  const onSubmit = async (data: PropertyFormValues, images: File[]) => {
     console.log('Form submitted with data:', data);
     try {
-      await handleSubmit(data, []); // We'll handle image upload separately
+      await submitProperty(data, images);
     } catch (error: any) {
       console.error('Form submission error:', error);
       toast({
@@ -47,12 +47,13 @@ export const PropertyFormWrapper = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <PropertyFormSections form={form} />
-        <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Submitting..." : "Submit Property"}
-        </Button>
-      </form>
+      <PropertyFormSections 
+        form={form} 
+        onSubmit={onSubmit}
+      />
+      <Button type="submit" disabled={isSubmitting}>
+        {isSubmitting ? "Submitting..." : "Submit Property"}
+      </Button>
     </Form>
   );
 };
