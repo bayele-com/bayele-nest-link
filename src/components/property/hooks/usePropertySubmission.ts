@@ -14,19 +14,26 @@ export const usePropertySubmission = () => {
   const user = useUser();
 
   const uploadImages = async (propertyId: string, images: File[]) => {
+    console.log('Starting image upload for property:', propertyId);
     const uploadPromises = images.map(async (file) => {
       const fileExt = file.name.split('.').pop();
       const fileName = `${propertyId}/${Math.random()}.${fileExt}`;
-      const { error: uploadError } = await supabase.storage
+      
+      console.log('Uploading image:', fileName);
+      const { error: uploadError, data } = await supabase.storage
         .from('property-images')
         .upload(fileName, file);
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        console.error('Image upload error:', uploadError);
+        throw uploadError;
+      }
 
       const { data: { publicUrl } } = supabase.storage
         .from('property-images')
         .getPublicUrl(fileName);
 
+      console.log('Image uploaded successfully:', publicUrl);
       return publicUrl;
     });
 
@@ -34,6 +41,7 @@ export const usePropertySubmission = () => {
   };
 
   const handleSubmit = async (data: PropertyFormValues, selectedImages: File[]) => {
+    console.log('Starting property submission with data:', data);
     try {
       setIsSubmitting(true);
 
@@ -57,22 +65,34 @@ export const usePropertySubmission = () => {
         is_featured: false,
       };
 
+      console.log('Inserting property with data:', propertyData);
       const { data: property, error: insertError } = await supabase
         .from('properties')
         .insert(propertyData)
         .select()
         .single();
 
-      if (insertError) throw insertError;
+      if (insertError) {
+        console.error('Property insertion error:', insertError);
+        throw insertError;
+      }
+
+      console.log('Property inserted successfully:', property);
 
       if (selectedImages.length > 0) {
+        console.log('Uploading property images...');
         const imageUrls = await uploadImages(property.id, selectedImages);
+        
         const { error: updateError } = await supabase
           .from('properties')
           .update({ images: imageUrls })
           .eq('id', property.id);
 
-        if (updateError) throw updateError;
+        if (updateError) {
+          console.error('Error updating property with image URLs:', updateError);
+          throw updateError;
+        }
+        console.log('Property images updated successfully');
       }
 
       toast({
@@ -91,7 +111,7 @@ export const usePropertySubmission = () => {
       console.error('Error submitting property:', error);
       toast({
         title: "Error",
-        description: "Failed to submit property. Please try again.",
+        description: error.message || "Failed to submit property. Please try again.",
         variant: "destructive",
       });
     } finally {
