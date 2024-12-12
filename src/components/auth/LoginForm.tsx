@@ -41,19 +41,23 @@ const LoginForm = () => {
     
     setIsLoading(true);
     try {
+      console.log("Attempting to sign in with:", data.email); // Debug log
       const { data: authData, error } = await signIn(data.email, data.password);
       
       if (error) {
+        console.error("Login error:", error); // Debug log
         if (error.message.includes("Email not confirmed")) {
           toast.error("Please confirm your email address before logging in");
         } else if (error.message.includes("Invalid login credentials")) {
-          toast.error("Invalid email or password");
+          toast.error("Invalid email or password. Please check your credentials and try again.");
         } else {
           toast.error("Error signing in. Please try again.");
         }
+        setIsLoading(false);
         return;
       }
 
+      console.log("Auth successful, user data:", authData); // Debug log
       toast.success("Successfully logged in!");
 
       if (authData?.profile?.role === 'admin') {
@@ -63,8 +67,8 @@ const LoginForm = () => {
       }
       
     } catch (error: any) {
-      console.error("Login error:", error);
-      toast.error(error?.message || "An error occurred during login");
+      console.error("Unexpected error during login:", error); // Debug log
+      toast.error(error?.message || "An unexpected error occurred");
     } finally {
       setIsLoading(false);
     }
