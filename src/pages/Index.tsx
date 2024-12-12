@@ -79,7 +79,7 @@ const Index = () => {
         <div className="container relative z-10 mx-auto px-4 pt-16">
           <div className="text-center animate-fade-down">
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-              Find Your Perfect Home in Cameroon
+              Find your home in less than 72 hours
             </h1>
             <p className="text-xl text-white/90 mb-8">
               Discover properties that match your lifestyle
@@ -92,7 +92,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Featured Properties */}
       <section className="py-20 bg-secondary">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12 animate-fade-up">
@@ -142,7 +141,7 @@ const Index = () => {
           )}
         </div>
       </section>
-
+      
       <Footer />
     </div>
   );
