@@ -15,7 +15,6 @@ import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { supabase } from "@/lib/supabase";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -42,12 +41,9 @@ const LoginForm = () => {
     
     setIsLoading(true);
     try {
-      const { error } = await signIn(data.email, data.password);
+      const { data: authData, error } = await signIn(data.email, data.password);
       
       if (error) {
-        console.error("Login error:", error);
-        
-        // Handle specific error cases
         if (error.message.includes("Email not confirmed")) {
           toast.error("Please confirm your email address before logging in");
         } else if (error.message.includes("Invalid login credentials")) {
@@ -55,28 +51,12 @@ const LoginForm = () => {
         } else {
           toast.error("Error signing in. Please try again.");
         }
-        
-        setIsLoading(false);
-        return;
-      }
-
-      // Get user profile and check role
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', (await supabase.auth.getUser()).data.user?.id)
-        .single();
-
-      if (profileError) {
-        console.error("Profile error:", profileError);
-        toast.error("Error fetching user profile");
-        setIsLoading(false);
         return;
       }
 
       toast.success("Successfully logged in!");
 
-      if (profile?.role === 'admin') {
+      if (authData?.profile?.role === 'admin') {
         navigate('/admin');
       } else {
         navigate('/');

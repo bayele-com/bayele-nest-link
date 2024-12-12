@@ -31,19 +31,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setUser(session?.user ?? null);
       setLoading(false);
-
-      if (session?.user) {
-        // Check user role and redirect accordingly
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', session.user.id)
-          .single();
-
-        if (profile?.role === 'admin') {
-          navigate('/admin');
-        }
-      }
     });
 
     return () => subscription.unsubscribe();
@@ -51,17 +38,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signIn = async (email: string, password: string) => {
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      if (error) {
-        console.error('SignIn error:', error);
-        return { error: new Error(error.message) };
+      if (authError) {
+        console.error('Authentication error:', authError);
+        return { error: new Error(authError.message) };
       }
 
-      return { data };
+      if (!authData.user) {
+        return { error: new Error('No user data returned') };
+      }
+
+      // Get user profile and check role
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', authData.user.id)
+        .single();
+
+      if (profileError) {
+        console.error('Profile fetch error:', profileError);
+        return { error: new Error('Error fetching user profile') };
+      }
+
+      return { data: { ...authData, profile } };
     } catch (error: any) {
       console.error('SignIn error:', error);
       return { error: new Error(error.message || 'An error occurred during sign in') };
