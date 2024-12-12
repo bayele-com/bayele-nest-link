@@ -31,12 +31,12 @@ export const PropertyFormWrapper = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-        <PropertyFormSections form={form} />
+      <div className="space-y-6">
+        <PropertyFormSections form={form} onSubmit={handleSubmit} />
         <Button type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Submitting..." : "Submit Property"}
         </Button>
-      </form>
+      </div>
     </Form>
   );
 };

@@ -10,19 +10,18 @@ import type { PropertyFormValues } from "../schemas/propertyFormSchema";
 
 interface PropertyFormSectionsProps {
   form: UseFormReturn<PropertyFormValues>;
+  onSubmit: (data: PropertyFormValues, images: File[]) => Promise<void>;
 }
 
-export const PropertyFormSections = ({ form }: PropertyFormSectionsProps) => {
+export const PropertyFormSections = ({ form, onSubmit }: PropertyFormSectionsProps) => {
   const { handleImageChange, selectedImages } = useImageUpload();
 
-  const onSubmit = form.handleSubmit((data) => {
-    form.handleSubmit((formData) => {
-      handleSubmit(formData, selectedImages);
-    })();
+  const handleFormSubmit = form.handleSubmit((data) => {
+    onSubmit(data, selectedImages);
   });
 
   return (
-    <>
+    <form onSubmit={handleFormSubmit} className="space-y-6">
       <BasicInfoFields form={form} />
       <LocationFields form={form} />
       <PropertyDetailsFields form={form} />
@@ -32,6 +31,6 @@ export const PropertyFormSections = ({ form }: PropertyFormSectionsProps) => {
         handleImageChange={handleImageChange}
         selectedImages={selectedImages}
       />
-    </>
+    </form>
   );
 };
