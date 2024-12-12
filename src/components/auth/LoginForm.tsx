@@ -38,14 +38,24 @@ const LoginForm = () => {
   });
 
   const onSubmit = async (data: LoginFormValues) => {
-    if (isLoading) return; // Prevent multiple submissions
+    if (isLoading) return;
     
     setIsLoading(true);
     try {
       const { error } = await signIn(data.email, data.password);
       
       if (error) {
-        toast.error("Invalid email or password");
+        console.error("Login error:", error);
+        
+        // Handle specific error cases
+        if (error.message.includes("Email not confirmed")) {
+          toast.error("Please confirm your email address before logging in");
+        } else if (error.message.includes("Invalid login credentials")) {
+          toast.error("Invalid email or password");
+        } else {
+          toast.error("Error signing in. Please try again.");
+        }
+        
         setIsLoading(false);
         return;
       }
@@ -58,6 +68,7 @@ const LoginForm = () => {
         .single();
 
       if (profileError) {
+        console.error("Profile error:", profileError);
         toast.error("Error fetching user profile");
         setIsLoading(false);
         return;
@@ -74,6 +85,7 @@ const LoginForm = () => {
     } catch (error: any) {
       console.error("Login error:", error);
       toast.error(error?.message || "An error occurred during login");
+    } finally {
       setIsLoading(false);
     }
   };
