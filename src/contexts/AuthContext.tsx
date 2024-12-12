@@ -49,6 +49,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe();
   }, [navigate]);
 
+  const signIn = async (email: string, password: string) => {
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        console.error('SignIn error:', error);
+        return { error: new Error(error.message) };
+      }
+
+      return { data };
+    } catch (error: any) {
+      console.error('SignIn error:', error);
+      return { error: new Error(error.message || 'An error occurred during sign in') };
+    }
+  };
+
   const signUp = async (email: string, password: string, firstName: string, lastName: string) => {
     try {
       const { error } = await supabase.auth.signUp({
@@ -69,28 +88,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (error: any) {
       toast.error(error.message || 'Error during registration. Please try again.');
       throw error;
-    }
-  };
-
-  const signIn = async (email: string, password: string) => {
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (error) {
-        return { error: new Error(error.message) };
-      }
-
-      if (data?.user) {
-        toast.success('Successfully logged in!');
-        return { data };
-      }
-
-      return { error: new Error('No user data returned') };
-    } catch (error: any) {
-      return { error: new Error(error.message) };
     }
   };
 
