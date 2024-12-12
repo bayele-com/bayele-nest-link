@@ -41,9 +41,11 @@ const LoginForm = () => {
     
     setIsLoading(true);
     try {
+      console.log('Attempting to sign in with:', data.email);
       const { data: authData, error } = await signIn(data.email, data.password);
       
       if (error) {
+        console.error('Login error:', error);
         if (error.message.includes("Email not confirmed")) {
           toast.error("Please verify your email address before logging in");
         } else if (error.message.includes("Invalid login credentials")) {
@@ -69,6 +71,7 @@ const LoginForm = () => {
       }
       
     } catch (error: any) {
+      console.error('Unexpected error during login:', error);
       toast.error(error?.message || "An unexpected error occurred");
     } finally {
       setIsLoading(false);

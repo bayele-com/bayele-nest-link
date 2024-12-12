@@ -38,18 +38,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signIn = async (email: string, password: string) => {
     try {
+      console.log('Attempting to sign in with:', email);
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) {
-        console.error('Authentication error:', error);
-        return { error };
+        console.error('Sign in error:', error);
+        throw error;
       }
 
       if (!data.user) {
-        return { error: new Error('No user data returned') };
+        throw new Error('No user data returned');
       }
 
       // Get user profile and check role
@@ -61,9 +62,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (profileError) {
         console.error('Profile fetch error:', profileError);
-        return { error: new Error('Error fetching user profile') };
+        throw new Error('Error fetching user profile');
       }
 
+      console.log('Sign in successful:', { user: data.user, profile });
       return { data: { ...data, profile } };
     } catch (error: any) {
       console.error('SignIn error:', error);
