@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button";
 import { propertyFormSchema } from "../schemas/propertyFormSchema";
 import { PropertyFormSections } from "./PropertyFormSections";
 import { usePropertySubmission } from "../hooks/usePropertySubmission";
+import { PropertyType, City, ManagementType } from "@/integrations/supabase/types/enums";
 import type { PropertyFormValues } from "../schemas/propertyFormSchema";
-import type { PropertyType, City, ManagementType } from "@/integrations/supabase/types/enums";
 
 export const PropertyFormWrapper = () => {
   const { isSubmitting, handleSubmit } = usePropertySubmission();

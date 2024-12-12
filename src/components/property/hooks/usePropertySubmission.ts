@@ -13,8 +13,8 @@ export const usePropertySubmission = () => {
   const navigate = useNavigate();
   const user = useUser();
 
-  const uploadImages = async (propertyId: string, selectedImages: File[]) => {
-    const uploadPromises = selectedImages.map(async (file) => {
+  const uploadImages = async (propertyId: string, images: File[]) => {
+    const uploadPromises = images.map(async (file) => {
       const fileExt = file.name.split('.').pop();
       const fileName = `${propertyId}/${Math.random()}.${fileExt}`;
       const { error: uploadError } = await supabase.storage
@@ -33,7 +33,7 @@ export const usePropertySubmission = () => {
     return Promise.all(uploadPromises);
   };
 
-  const handleSubmit = async (data: PropertyFormValues) => {
+  const handleSubmit = async (data: PropertyFormValues, selectedImages: File[]) => {
     try {
       setIsSubmitting(true);
 

@@ -15,6 +15,12 @@ interface PropertyFormSectionsProps {
 export const PropertyFormSections = ({ form }: PropertyFormSectionsProps) => {
   const { handleImageChange, selectedImages } = useImageUpload();
 
+  const onSubmit = form.handleSubmit((data) => {
+    form.handleSubmit((formData) => {
+      handleSubmit(formData, selectedImages);
+    })();
+  });
+
   return (
     <>
       <BasicInfoFields form={form} />
