@@ -28,43 +28,45 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     // Listen for changes on auth state
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
       setLoading(false);
     });
 
     return () => subscription.unsubscribe();
-  }, [navigate]);
+  }, []);
 
   const signIn = async (email: string, password: string) => {
     try {
-      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+      console.log('Attempting to sign in with email:', email);
+      
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      if (authError) {
-        console.error('Authentication error:', authError);
-        return { error: new Error(authError.message) };
+      if (error) {
+        console.error('Authentication error:', error);
+        throw error;
       }
 
-      if (!authData.user) {
-        return { error: new Error('No user data returned') };
+      if (!data.user) {
+        throw new Error('No user data returned');
       }
 
       // Get user profile and check role
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('role')
-        .eq('id', authData.user.id)
+        .eq('id', data.user.id)
         .single();
 
       if (profileError) {
         console.error('Profile fetch error:', profileError);
-        return { error: new Error('Error fetching user profile') };
+        throw new Error('Error fetching user profile');
       }
 
-      return { data: { ...authData, profile } };
+      return { data: { ...data, profile } };
     } catch (error: any) {
       console.error('SignIn error:', error);
       return { error: new Error(error.message || 'An error occurred during sign in') };
