@@ -1,7 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
 import { propertyFormSchema } from "../schemas/propertyFormSchema";
 import { PropertyFormSections } from "./PropertyFormSections";
 import { usePropertySubmission } from "../hooks/usePropertySubmission";
@@ -41,7 +40,7 @@ export const PropertyFormWrapper = () => {
         title: "Success",
         description: "Property submitted successfully",
       });
-      form.reset(); // Reset form after successful submission
+      form.reset();
     } catch (error: any) {
       console.error('Form submission error:', error);
       toast({
@@ -58,9 +57,6 @@ export const PropertyFormWrapper = () => {
         form={form} 
         onSubmit={onSubmit}
       />
-      <Button type="submit" disabled={isSubmitting}>
-        {isSubmitting ? "Submitting..." : "Submit Property"}
-      </Button>
     </Form>
   );
 };
