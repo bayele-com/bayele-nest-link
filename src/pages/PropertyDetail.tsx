@@ -78,6 +78,11 @@ const PropertyDetail = () => {
     );
   }
 
+  // Use a default placeholder if no images are available
+  const propertyImages = property.images && property.images.length > 0 
+    ? property.images 
+    : ['/placeholder.svg'];
+
   const getStatusColor = (status: PropertyStatus) => {
     switch (status) {
       case PropertyStatus.AVAILABLE:
@@ -97,7 +102,7 @@ const PropertyDetail = () => {
         <div className="space-y-6">
           <Card className="p-4">
             <PropertyImageCarousel 
-              images={property.images || []} 
+              images={propertyImages}
               title={property.title} 
             />
           </Card>
