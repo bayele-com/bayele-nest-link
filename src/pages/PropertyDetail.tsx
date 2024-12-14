@@ -8,57 +8,83 @@ import PropertyFeatures from "@/components/property/PropertyFeatures";
 import PropertyContactButtons from "@/components/property/PropertyContactButtons";
 import { MapPin, Calendar } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { Tables } from "@/integrations/supabase/types";
+import { PropertyStatus } from "@/integrations/supabase/types/enums";
 
 const PropertyDetail = () => {
   const { id } = useParams();
-  
-  // This would normally come from an API call using the id
-  const property = {
-    id: 1,
-    title: "Modern Apartment in Bastos",
-    description: "Beautiful and spacious apartment located in the heart of Bastos. Features modern amenities and a stunning view of the city. This property offers the perfect blend of comfort and convenience, with easy access to local shops, restaurants, and transportation.",
-    location: "Bastos, Yaoundé",
-    price: "350,000",
-    type: "Apartment",
-    bedrooms: 3,
-    bathrooms: 2,
-    status: "available",
-    area: "150",
-    images: [
-      "https://images.unsplash.com/photo-1518005020951-eccb494ad742",
-      "https://images.unsplash.com/photo-1513836279014-a89f7a76ae86",
-      "https://images.unsplash.com/photo-1500673922987-e212871fec22",
-    ],
-    features: [
-      "Air Conditioning",
-      "Parking",
-      "24/7 Security",
-      "Water Supply",
-      "Backup Generator",
-      "Modern Kitchen",
-      "Balcony",
-      "High-Speed Internet"
-    ],
-    amenities: [
-      "Swimming Pool",
-      "Gym",
-      "Children's Play Area",
-      "Visitor Parking"
-    ],
-    contact: {
-      phone: "+237612345678",
-      whatsapp: "+237612345678"
-    },
-    availableFrom: "2024-03-01"
-  };
 
-  const getStatusColor = (status: string) => {
+  const { data: property, isLoading, error } = useQuery({
+    queryKey: ['property', id],
+    queryFn: async () => {
+      console.log('Fetching property with ID:', id);
+      const { data, error } = await supabase
+        .from('properties')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (error) {
+        console.error('Error fetching property:', error);
+        throw error;
+      }
+
+      console.log('Fetched property:', data);
+      return data as Tables<"properties">;
+    },
+  });
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto px-4 py-8">
+          <div className="animate-pulse space-y-6">
+            <div className="h-96 bg-gray-200 rounded-lg"></div>
+            <div className="space-y-3">
+              <div className="h-6 bg-gray-200 rounded w-3/4"></div>
+              <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto px-4 py-8">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-red-500">Error loading property</h2>
+            <p className="text-muted-foreground">Please try again later</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!property) {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto px-4 py-8">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold">Property not found</h2>
+            <p className="text-muted-foreground">The property you're looking for doesn't exist</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const getStatusColor = (status: PropertyStatus) => {
     switch (status) {
-      case "available":
+      case PropertyStatus.AVAILABLE:
         return "bg-green-500/10 text-green-500";
-      case "occupied":
+      case PropertyStatus.OCCUPIED:
         return "bg-red-500/10 text-red-500";
-      case "maintenance":
+      case PropertyStatus.MAINTENANCE:
         return "bg-yellow-500/10 text-yellow-500";
       default:
         return "bg-green-500/10 text-green-500";
@@ -71,7 +97,7 @@ const PropertyDetail = () => {
         <div className="space-y-6">
           <Card className="p-4">
             <PropertyImageCarousel 
-              images={property.images} 
+              images={property.images || []} 
               title={property.title} 
             />
           </Card>
@@ -87,18 +113,18 @@ const PropertyDetail = () => {
                       {property.location}
                     </div>
                   </div>
-                  <Badge className={cn("capitalize", getStatusColor(property.status))}>
-                    {property.status}
+                  <Badge className={cn("capitalize", getStatusColor(property.status || PropertyStatus.AVAILABLE))}>
+                    {property.status || PropertyStatus.AVAILABLE}
                   </Badge>
                 </div>
 
                 <div className="flex items-center justify-between py-4">
                   <div className="text-2xl font-bold text-primary">
-                    {property.price} FCFA<span className="text-sm font-normal text-muted-foreground">/month</span>
+                    {property.price.toLocaleString()} FCFA<span className="text-sm font-normal text-muted-foreground">/month</span>
                   </div>
                   <div className="flex items-center text-muted-foreground">
                     <Calendar className="h-4 w-4 mr-2" />
-                    Available from {new Date(property.availableFrom).toLocaleDateString()}
+                    Available now
                   </div>
                 </div>
 
@@ -107,36 +133,31 @@ const PropertyDetail = () => {
                 <PropertyDetails
                   title={property.title}
                   location={property.location}
-                  price={property.price}
+                  price={property.price.toLocaleString()}
                   bedrooms={property.bedrooms}
                   bathrooms={property.bathrooms}
-                  area={property.area}
+                  area={property.area?.toString() || "N/A"}
                   description={property.description}
                 />
               </Card>
 
-              <Card className="p-6">
-                <h2 className="text-xl font-semibold mb-4">Features & Amenities</h2>
-                <div className="space-y-6">
+              {property.amenities && property.amenities.length > 0 && (
+                <Card className="p-6">
+                  <h2 className="text-xl font-semibold mb-4">Features & Amenities</h2>
                   <PropertyFeatures 
                     title="Property Features" 
-                    features={property.features} 
-                  />
-                  <Separator />
-                  <PropertyFeatures 
-                    title="Building Amenities" 
                     features={property.amenities} 
                   />
-                </div>
-              </Card>
+                </Card>
+              )}
             </div>
 
             <div className="lg:col-span-1">
               <Card className="p-6 sticky top-6">
                 <h3 className="font-semibold mb-4">Contact Property Owner</h3>
                 <PropertyContactButtons
-                  phone={property.contact.phone}
-                  whatsapp={property.contact.whatsapp}
+                  phone={property.phone || ''}
+                  whatsapp={property.whatsapp || ''}
                   title={property.title}
                 />
               </Card>
