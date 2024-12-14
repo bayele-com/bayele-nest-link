@@ -17,11 +17,24 @@ export const usePropertySubmission = () => {
     console.log('Starting image upload for property:', propertyId);
     console.log('Number of images to upload:', images.length);
     
+    if (images.length === 0) {
+      console.log('No images to upload');
+      return [];
+    }
+
     const uploadPromises = images.map(async (file, index) => {
       const fileExt = file.name.split('.').pop();
       const fileName = `${propertyId}/${Math.random()}.${fileExt}`;
       
       console.log(`Uploading image ${index + 1}/${images.length}:`, fileName);
+      
+      // First, check if file is valid
+      if (!file.type.startsWith('image/')) {
+        console.error(`File ${file.name} is not an image`);
+        throw new Error(`File ${file.name} is not an image`);
+      }
+
+      // Upload the file
       const { error: uploadError, data } = await supabase.storage
         .from('property-images')
         .upload(fileName, file);
@@ -31,6 +44,7 @@ export const usePropertySubmission = () => {
         throw uploadError;
       }
 
+      // Get the public URL
       const { data: { publicUrl } } = supabase.storage
         .from('property-images')
         .getPublicUrl(fileName);
@@ -39,7 +53,14 @@ export const usePropertySubmission = () => {
       return publicUrl;
     });
 
-    return Promise.all(uploadPromises);
+    try {
+      const urls = await Promise.all(uploadPromises);
+      console.log('All images uploaded successfully:', urls);
+      return urls;
+    } catch (error) {
+      console.error('Error uploading images:', error);
+      throw error;
+    }
   };
 
   const handleSubmit = async (data: PropertyFormValues, selectedImages: File[]) => {
@@ -52,13 +73,11 @@ export const usePropertySubmission = () => {
       // Check if user is authenticated
       if (!user) {
         console.log('User not authenticated, storing form data in session storage');
-        // Store form data in session storage before redirecting
         sessionStorage.setItem('pendingPropertySubmission', JSON.stringify({
           formData: data,
           timestamp: new Date().toISOString()
         }));
         
-        // Redirect to login page with return URL
         navigate('/auth/login?returnTo=/manage');
         return;
       }
@@ -101,6 +120,7 @@ export const usePropertySubmission = () => {
         console.log('Starting image upload process...');
         const imageUrls = await uploadImages(property.id, selectedImages);
         
+        // Update property with image URLs
         const { error: updateError } = await supabase
           .from('properties')
           .update({ images: imageUrls })
@@ -121,7 +141,7 @@ export const usePropertySubmission = () => {
       // Clear any stored submission data
       sessionStorage.removeItem('pendingPropertySubmission');
       
-      // Always redirect to manage page after successful submission
+      // Navigate to manage page after successful submission
       navigate("/manage");
       
     } catch (error: any) {

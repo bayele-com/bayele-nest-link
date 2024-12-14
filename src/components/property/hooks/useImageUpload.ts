@@ -7,6 +7,7 @@ export const useImageUpload = () => {
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
+    
     if (files.length > 7) {
       toast({
         title: "Too many images",
@@ -17,6 +18,15 @@ export const useImageUpload = () => {
     }
     
     const validFiles = files.filter(file => {
+      if (!file.type.startsWith('image/')) {
+        toast({
+          title: "Invalid file type",
+          description: `${file.name} is not an image file`,
+          variant: "destructive",
+        });
+        return false;
+      }
+      
       if (file.size > 500000) {
         toast({
           title: "File too large",
@@ -28,7 +38,10 @@ export const useImageUpload = () => {
       return true;
     });
 
-    setSelectedImages(validFiles);
+    if (validFiles.length > 0) {
+      console.log('Valid images selected:', validFiles);
+      setSelectedImages(validFiles);
+    }
   };
 
   return { selectedImages, handleImageChange };
