@@ -66,9 +66,9 @@ export const usePropertySubmission = () => {
       setIsSubmitting(true);
 
       // Check if user is authenticated
-      const { data: session } = await supabase.auth.getSession();
+      const { data: sessionData } = await supabase.auth.getSession();
       
-      if (!session?.user) {
+      if (!sessionData?.session?.user) {
         console.log('User not authenticated, storing form data in session storage');
         // Store the submission data and current path
         sessionStorage.setItem('pendingPropertySubmission', JSON.stringify({
@@ -101,7 +101,7 @@ export const usePropertySubmission = () => {
         management_type: data.management_type,
         phone: data.phone || null,
         whatsapp: data.whatsapp || null,
-        owner_id: session.user.id,
+        owner_id: sessionData.session.user.id,
         status: PropertyStatus.PENDING,
         amenities: [],
         images: [],
