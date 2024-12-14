@@ -41,14 +41,22 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
     }
   };
 
+  // Use a placeholder image if the property image is not available
+  const imageUrl = property.image || "/placeholder.svg";
+  console.log('Property image URL:', imageUrl);
+
   return (
     <Link to={`/property/${property.id}`}>
       <Card className="group overflow-hidden transition-all hover:shadow-lg">
         <div className="relative">
           <img
-            src={property.image}
+            src={imageUrl}
             alt={property.title}
             className="h-48 w-full object-cover transition-transform group-hover:scale-105"
+            onError={(e) => {
+              console.error('Image failed to load:', imageUrl);
+              e.currentTarget.src = "/placeholder.svg";
+            }}
           />
           <PropertyBadges type={property.type} status={property.status} />
         </div>

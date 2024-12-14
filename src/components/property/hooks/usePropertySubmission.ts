@@ -49,6 +49,20 @@ export const usePropertySubmission = () => {
     try {
       setIsSubmitting(true);
 
+      // Check if user is authenticated
+      if (!user) {
+        console.log('User not authenticated, storing form data in session storage');
+        // Store form data in session storage before redirecting
+        sessionStorage.setItem('pendingPropertySubmission', JSON.stringify({
+          formData: data,
+          timestamp: new Date().toISOString()
+        }));
+        
+        // Redirect to login page with return URL
+        navigate('/auth/login?returnTo=/manage');
+        return;
+      }
+
       const propertyData: TablesInsert<"properties"> = {
         title: data.title,
         description: data.description,
@@ -62,7 +76,7 @@ export const usePropertySubmission = () => {
         management_type: data.management_type,
         phone: data.phone || null,
         whatsapp: data.whatsapp || null,
-        owner_id: user?.id || null,
+        owner_id: user.id,
         status: PropertyStatus.PENDING,
         amenities: [],
         images: [],
@@ -101,18 +115,22 @@ export const usePropertySubmission = () => {
 
       toast({
         title: "Property submitted",
-        description: user?.id 
-          ? "Your property has been submitted for review."
-          : "Your property has been submitted for review. Create an account to manage your listings.",
+        description: "Your property has been submitted for review.",
       });
 
-      if (user?.id) {
-        navigate("/manage");
-      } else {
-        navigate("/auth/register");
-      }
+      // Clear any stored submission data
+      sessionStorage.removeItem('pendingPropertySubmission');
+      
+      // Always redirect to manage page after successful submission
+      navigate("/manage");
+      
     } catch (error: any) {
       console.error('Error submitting property:', error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to submit property",
+        variant: "destructive",
+      });
       throw error;
     } finally {
       setIsSubmitting(false);
