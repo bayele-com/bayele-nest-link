@@ -1,17 +1,15 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
-import { useUser } from "@supabase/auth-helpers-react";
 import { PropertyStatus } from "@/integrations/supabase/types/enums";
 import type { PropertyFormValues } from "../schemas/propertyFormSchema";
-import type { TablesInsert } from "@/integrations/supabase/types";
 
 export const usePropertySubmission = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
-  const user = useUser();
+  const location = useLocation();
 
   const uploadImages = async (propertyId: string, images: File[]) => {
     console.log('Starting image upload for property:', propertyId);
@@ -28,13 +26,11 @@ export const usePropertySubmission = () => {
       
       console.log(`Uploading image ${index + 1}/${images.length}:`, fileName);
       
-      // First, check if file is valid
       if (!file.type.startsWith('image/')) {
         console.error(`File ${file.name} is not an image`);
         throw new Error(`File ${file.name} is not an image`);
       }
 
-      // Upload the file
       const { error: uploadError, data } = await supabase.storage
         .from('property-images')
         .upload(fileName, file);
@@ -44,7 +40,6 @@ export const usePropertySubmission = () => {
         throw uploadError;
       }
 
-      // Get the public URL
       const { data: { publicUrl } } = supabase.storage
         .from('property-images')
         .getPublicUrl(fileName);
@@ -71,18 +66,29 @@ export const usePropertySubmission = () => {
       setIsSubmitting(true);
 
       // Check if user is authenticated
-      if (!user) {
+      const { data: session } = await supabase.auth.getSession();
+      
+      if (!session?.user) {
         console.log('User not authenticated, storing form data in session storage');
+        // Store the submission data and current path
         sessionStorage.setItem('pendingPropertySubmission', JSON.stringify({
           formData: data,
+          images: selectedImages,
+          returnPath: location.pathname,
           timestamp: new Date().toISOString()
         }));
         
-        navigate('/auth/login?returnTo=/manage');
+        // Redirect to login with return URL
+        navigate('/auth/login?returnTo=/manage', { 
+          state: { 
+            from: location.pathname,
+            pendingSubmission: true 
+          }
+        });
         return;
       }
 
-      const propertyData: TablesInsert<"properties"> = {
+      const propertyData = {
         title: data.title,
         description: data.description,
         type: data.type,
@@ -95,7 +101,7 @@ export const usePropertySubmission = () => {
         management_type: data.management_type,
         phone: data.phone || null,
         whatsapp: data.whatsapp || null,
-        owner_id: user.id,
+        owner_id: session.user.id,
         status: PropertyStatus.PENDING,
         amenities: [],
         images: [],

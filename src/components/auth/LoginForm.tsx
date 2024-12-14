@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/AuthContext";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { toast } from "sonner";
 
 const loginSchema = z.object({
@@ -27,6 +27,7 @@ const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { signIn } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -63,11 +64,26 @@ const LoginForm = () => {
 
       toast.success("Successfully logged in!");
       
-      // Check user role and redirect accordingly
-      if (authData?.profile?.role === 'admin') {
-        navigate('/admin');
+      // Check for pending property submission
+      const pendingSubmission = sessionStorage.getItem('pendingPropertySubmission');
+      
+      if (pendingSubmission) {
+        // Redirect back to property submission
+        navigate('/manage', { 
+          state: { 
+            pendingSubmission: JSON.parse(pendingSubmission)
+          }
+        });
       } else {
-        navigate('/');
+        // Check user role and redirect accordingly
+        if (authData?.profile?.role === 'admin') {
+          navigate('/admin');
+        } else {
+          // Check for returnTo parameter in URL
+          const params = new URLSearchParams(location.search);
+          const returnTo = params.get('returnTo');
+          navigate(returnTo || '/');
+        }
       }
       
     } catch (error: any) {
