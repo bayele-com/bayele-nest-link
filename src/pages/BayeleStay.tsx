@@ -26,6 +26,7 @@ const BayeleStay = () => {
         .eq("type", PropertyType.FURNISHED)
         .eq("city", selectedCity.toLowerCase())
         .eq("status", PropertyStatus.AVAILABLE)
+        .eq("management_type", "bayele")
         .order("is_featured", { ascending: false });
 
       if (error) {

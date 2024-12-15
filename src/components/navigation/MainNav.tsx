@@ -19,16 +19,13 @@ const MainNav = () => {
 
   const MobileMenu = () => (
     <div className="flex flex-col space-y-4 p-4">
+      <Link to="/stay" className="text-sm font-medium">
+        Bayele Stay
+      </Link>
       <div className="space-y-2">
         <h4 className="text-sm font-medium leading-none">For Property Owners</h4>
         <p className="text-sm text-muted-foreground">
           List your property and reach thousands of potential tenants
-        </p>
-      </div>
-      <div className="space-y-2">
-        <h4 className="text-sm font-medium leading-none">For Tenants</h4>
-        <p className="text-sm text-muted-foreground">
-          Find your perfect home with our easy search tools
         </p>
       </div>
       <Link to="/manage" className="w-full">
@@ -73,6 +70,12 @@ const MainNav = () => {
         <div className="hidden md:flex items-center space-x-4">
           <NavigationMenu>
             <NavigationMenuList>
+              <NavigationMenuItem>
+                <Link to="/stay">
+                  <Button variant="ghost">Bayele Stay</Button>
+                </Link>
+              </NavigationMenuItem>
+
               <NavigationMenuItem>
                 <NavigationMenuTrigger>How it works</NavigationMenuTrigger>
                 <NavigationMenuContent>
