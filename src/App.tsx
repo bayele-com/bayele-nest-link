@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import Index from "./pages/Index";
+import BayeleStay from "./pages/BayeleStay";
 import PropertyDetail from "./pages/PropertyDetail";
 import PropertyManagement from "./pages/PropertyManagement";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -37,6 +38,7 @@ const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Index />} />
+      <Route path="/stay" element={<BayeleStay />} />
       <Route path="/property/:id" element={<PropertyDetail />} />
       <Route path="/manage" element={<PropertyManagement />} />
       <Route path="/auth/login" element={<LoginPage />} />
