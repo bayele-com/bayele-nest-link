@@ -4,7 +4,7 @@ import PropertyCard from "@/components/PropertyCard";
 import MainNav from "@/components/navigation/MainNav";
 import Footer from "@/components/navigation/Footer";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabase";
 import type { Tables } from "@/integrations/supabase/types";
 import type { PropertyStatus } from "@/integrations/supabase/types/enums";
 

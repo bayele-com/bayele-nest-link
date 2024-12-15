@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { City } from "@/integrations/supabase/types/enums";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabase";
 import MainNav from "@/components/navigation/MainNav";
 import Footer from "@/components/navigation/Footer";
 import { BayeleStayHero } from "@/components/bayele-stay/BayeleStayHero";
