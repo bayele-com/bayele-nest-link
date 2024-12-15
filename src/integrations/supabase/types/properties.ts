@@ -20,6 +20,8 @@ export interface Property {
   type: PropertyType;
   updated_at: string | null;
   whatsapp: string | null;
+  is_featured: boolean | null;
+  rejection_reason: string | null;
 }
 
 export interface PropertyInsert extends Omit<Property, 'id' | 'created_at' | 'updated_at'> {
