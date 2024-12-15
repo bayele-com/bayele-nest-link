@@ -8,7 +8,7 @@ export const HowItWorks = () => {
     },
     {
       title: "Select & Contact",
-      description: "Click the "Book via WhatsApp" button",
+      description: 'Click the "Book via WhatsApp" button',
     },
     {
       title: "Talk to an Agent",
