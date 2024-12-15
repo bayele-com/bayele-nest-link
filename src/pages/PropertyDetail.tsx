@@ -8,13 +8,13 @@ import PropertyDetails from "@/components/property/PropertyDetails";
 import PropertyImageCarousel from "@/components/property/PropertyImageCarousel";
 import MainNav from "@/components/navigation/MainNav";
 import Footer from "@/components/navigation/Footer";
+import type { Property } from "@/integrations/supabase/types";
 
 const PropertyDetail = () => {
   const { id } = useParams<{ id: string }>();
-  const [property, setProperty] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const [property, setProperty] = useState<Property | null>(null);
 
-  const { data, error } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ["property", id],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -26,17 +26,18 @@ const PropertyDetail = () => {
       if (error) throw error;
       return data;
     },
-    onSuccess: (data) => {
-      setProperty(data);
-      setLoading(false);
-    },
-    onError: () => {
-      setLoading(false);
+    meta: {
+      onSettled: (data) => {
+        if (data) {
+          setProperty(data);
+        }
+      }
     }
   });
 
-  if (loading) return <div>Loading...</div>;
+  if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading property: {error.message}</div>;
+  if (!property) return <div>Property not found</div>;
 
   return (
     <div>
