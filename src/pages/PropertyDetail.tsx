@@ -8,7 +8,7 @@ import PropertyDetails from "@/components/property/PropertyDetails";
 import PropertyImageCarousel from "@/components/property/PropertyImageCarousel";
 import MainNav from "@/components/navigation/MainNav";
 import Footer from "@/components/navigation/Footer";
-import type { Property } from "@/integrations/supabase/types";
+import type { Property } from "@/integrations/supabase/types/properties";
 
 const PropertyDetail = () => {
   const { id } = useParams<{ id: string }>();
