@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { City, PropertyStatus, PropertyType } from "@/integrations/supabase/types/enums";
 import { supabase } from "@/lib/supabase";
 import MainNav from "@/components/navigation/MainNav";
 import Footer from "@/components/navigation/Footer";
+import { SEO } from "@/components/SEO";
 import { BayeleStayHero } from "@/components/bayele-stay/BayeleStayHero";
 import { CityToggle } from "@/components/bayele-stay/CityToggle";
 import { FeaturedProperties } from "@/components/bayele-stay/FeaturedProperties";
@@ -11,6 +13,7 @@ import { HowItWorks } from "@/components/bayele-stay/HowItWorks";
 import { PropertyGrid } from "@/components/bayele-stay/PropertyGrid";
 
 const BayeleStay = () => {
+  const { t } = useTranslation();
   const [selectedCity, setSelectedCity] = useState<City>(City.YAOUNDE);
 
   const { data: properties, isLoading } = useQuery({
@@ -43,6 +46,10 @@ const BayeleStay = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO 
+        title={t(`meta.${selectedCity.toLowerCase()}.title`)}
+        description={t(`meta.${selectedCity.toLowerCase()}.description`)}
+      />
       <MainNav />
       <BayeleStayHero />
       
@@ -51,11 +58,8 @@ const BayeleStay = () => {
           selectedCity={selectedCity} 
           onCityChange={setSelectedCity} 
         />
-
         <FeaturedProperties properties={properties} isLoading={isLoading} />
-        
         <HowItWorks />
-        
         <PropertyGrid properties={properties} isLoading={isLoading} />
       </main>
 

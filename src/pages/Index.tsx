@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { PropertyFilters, FilterValues } from "@/components/PropertyFilters";
 import PropertyCard from "@/components/PropertyCard";
 import MainNav from "@/components/navigation/MainNav";
 import Footer from "@/components/navigation/Footer";
+import { SEO } from "@/components/SEO";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import type { Tables } from "@/integrations/supabase/types";
@@ -11,6 +13,7 @@ import type { PropertyStatus } from "@/integrations/supabase/types/enums";
 type Property = Tables<"properties">;
 
 const Index = () => {
+  const { t } = useTranslation();
   const [filters, setFilters] = useState<FilterValues>({
     city: "",
     propertyType: "",
@@ -60,6 +63,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO />
       <MainNav />
       
       {/* Hero Section */}
