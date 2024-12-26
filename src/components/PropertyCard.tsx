@@ -4,6 +4,7 @@ import { PropertyBadges } from "./property/card/PropertyBadges";
 import { PropertyDetails } from "./property/card/PropertyDetails";
 import { PropertyActions } from "./property/card/PropertyActions";
 import type { PropertyStatus } from "@/integrations/supabase/types/enums";
+import { useState } from "react";
 
 interface PropertyCardProps {
   property: {
@@ -23,6 +24,8 @@ interface PropertyCardProps {
 }
 
 const PropertyCard = ({ property }: PropertyCardProps) => {
+  const [imageError, setImageError] = useState(false);
+
   const handleWhatsApp = (e: React.MouseEvent) => {
     e.preventDefault();
     if (property.whatsapp) {
@@ -41,8 +44,13 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
     }
   };
 
-  // Use a placeholder image if the property image is not available
-  const imageUrl = property.image || "/placeholder.svg";
+  const handleImageError = () => {
+    console.error('Image failed to load:', property.image);
+    setImageError(true);
+  };
+
+  // Use a placeholder image if the property image is not available or failed to load
+  const imageUrl = imageError || !property.image ? "/placeholder.svg" : property.image;
 
   return (
     <Link to={`/property/${property.id}`}>
@@ -52,10 +60,7 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
             src={imageUrl}
             alt={property.title}
             className="h-48 w-full object-cover transition-transform group-hover:scale-105"
-            onError={(e) => {
-              console.error('Image failed to load:', imageUrl);
-              e.currentTarget.src = "/placeholder.svg";
-            }}
+            onError={handleImageError}
           />
           <PropertyBadges type={property.type} status={property.status} />
         </div>

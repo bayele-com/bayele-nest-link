@@ -13,11 +13,11 @@ interface PropertyImageCarouselProps {
 }
 
 const PropertyImageCarousel = ({ images, title }: PropertyImageCarouselProps) => {
-  const [imageLoadError, setImageLoadError] = useState<{ [key: string]: boolean }>({});
+  const [imageLoadErrors, setImageLoadErrors] = useState<{ [key: string]: boolean }>({});
 
   const handleImageError = (imageUrl: string) => {
     console.error(`Failed to load image: ${imageUrl}`);
-    setImageLoadError(prev => ({ ...prev, [imageUrl]: true }));
+    setImageLoadErrors(prev => ({ ...prev, [imageUrl]: true }));
   };
 
   return (
@@ -25,9 +25,9 @@ const PropertyImageCarousel = ({ images, title }: PropertyImageCarouselProps) =>
       <CarouselContent>
         {images.map((image, index) => (
           <CarouselItem key={index}>
-            <div className="aspect-video relative rounded-lg overflow-hidden">
+            <div className="aspect-video relative rounded-lg overflow-hidden bg-muted">
               <img
-                src={imageLoadError[image] ? '/placeholder.svg' : image}
+                src={imageLoadErrors[image] ? '/placeholder.svg' : image}
                 alt={`${title} - Image ${index + 1}`}
                 className="object-cover w-full h-full"
                 onError={() => handleImageError(image)}
@@ -36,8 +36,8 @@ const PropertyImageCarousel = ({ images, title }: PropertyImageCarouselProps) =>
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
+      <CarouselPrevious className="left-4" />
+      <CarouselNext className="right-4" />
     </Carousel>
   );
 };

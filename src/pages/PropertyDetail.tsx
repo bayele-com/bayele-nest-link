@@ -10,12 +10,13 @@ import { PropertyBookingDetails } from "@/components/property/PropertyBookingDet
 import MainNav from "@/components/navigation/MainNav";
 import Footer from "@/components/navigation/Footer";
 import type { Property } from "@/integrations/supabase/types/properties";
+import { toast } from "sonner";
 
 const PropertyDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [property, setProperty] = useState<Property | null>(null);
 
-  const { data, isLoading, error } = useQuery({
+  const { isLoading, error } = useQuery({
     queryKey: ["property", id],
     queryFn: async () => {
       console.log('Fetching property details for ID:', id);
@@ -23,30 +24,57 @@ const PropertyDetail = () => {
         .from("properties")
         .select("*")
         .eq("id", id)
-        .single();
+        .maybeSingle();
 
       if (error) {
         console.error('Error fetching property:', error);
+        toast.error("Failed to load property details");
         throw error;
+      }
+
+      if (!data) {
+        console.error('Property not found');
+        toast.error("Property not found");
+        return null;
       }
       
       console.log('Property details fetched:', data);
+      setProperty(data);
       return data;
     },
-    meta: {
-      onSettled: (data) => {
-        if (data) {
-          setProperty(data);
-        }
-      }
-    }
   });
 
-  if (isLoading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
-  if (error) return <div className="min-h-screen flex items-center justify-center">Error loading property: {error.message}</div>;
-  if (!property) return <div className="min-h-screen flex items-center justify-center">Property not found</div>;
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
-  // Use placeholder image if no images are available
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-semibold mb-2">Error loading property</h2>
+          <p className="text-muted-foreground">{error.message}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!property) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-semibold mb-2">Property not found</h2>
+          <p className="text-muted-foreground">The property you're looking for doesn't exist or has been removed.</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Use placeholder images if no images are available
   const propertyImages = property.images?.length ? property.images : ["/placeholder.svg"];
 
   return (
