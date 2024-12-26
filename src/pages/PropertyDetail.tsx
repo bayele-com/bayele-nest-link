@@ -44,6 +44,12 @@ const PropertyDetail = () => {
     },
   });
 
+  // Use a default placeholder image if no images are available
+  const defaultImage = "/placeholder.svg";
+  const propertyImages = property?.images?.length 
+    ? property.images 
+    : [defaultImage];
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -73,9 +79,6 @@ const PropertyDetail = () => {
       </div>
     );
   }
-
-  // Use placeholder images if no images are available
-  const propertyImages = property.images?.length ? property.images : ["/placeholder.svg"];
 
   return (
     <div>

@@ -20,6 +20,16 @@ const PropertyImageCarousel = ({ images, title }: PropertyImageCarouselProps) =>
     setImageLoadErrors(prev => ({ ...prev, [imageUrl]: true }));
   };
 
+  // If all images have failed to load, show a message
+  const allImagesFailed = images.every(image => imageLoadErrors[image]);
+  if (allImagesFailed) {
+    return (
+      <div className="w-full max-w-4xl mx-auto aspect-video bg-muted flex items-center justify-center rounded-lg">
+        <p className="text-muted-foreground">No images available</p>
+      </div>
+    );
+  }
+
   return (
     <Carousel className="w-full max-w-4xl mx-auto">
       <CarouselContent>
@@ -36,8 +46,12 @@ const PropertyImageCarousel = ({ images, title }: PropertyImageCarouselProps) =>
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious className="left-4" />
-      <CarouselNext className="right-4" />
+      {images.length > 1 && (
+        <>
+          <CarouselPrevious className="left-4" />
+          <CarouselNext className="right-4" />
+        </>
+      )}
     </Carousel>
   );
 };
