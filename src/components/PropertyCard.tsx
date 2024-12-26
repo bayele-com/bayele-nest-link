@@ -43,7 +43,6 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
 
   // Use a placeholder image if the property image is not available
   const imageUrl = property.image || "/placeholder.svg";
-  console.log('Property image URL:', imageUrl);
 
   return (
     <Link to={`/property/${property.id}`}>

@@ -18,13 +18,19 @@ const PropertyDetail = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ["property", id],
     queryFn: async () => {
+      console.log('Fetching property details for ID:', id);
       const { data, error } = await supabase
         .from("properties")
         .select("*")
         .eq("id", id)
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching property:', error);
+        throw error;
+      }
+      
+      console.log('Property details fetched:', data);
       return data;
     },
     meta: {
@@ -36,14 +42,17 @@ const PropertyDetail = () => {
     }
   });
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error loading property: {error.message}</div>;
-  if (!property) return <div>Property not found</div>;
+  if (isLoading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  if (error) return <div className="min-h-screen flex items-center justify-center">Error loading property: {error.message}</div>;
+  if (!property) return <div className="min-h-screen flex items-center justify-center">Property not found</div>;
+
+  // Use placeholder image if no images are available
+  const propertyImages = property.images?.length ? property.images : ["/placeholder.svg"];
 
   return (
     <div>
       <MainNav />
-      <PropertyImageCarousel images={property.images || []} title={property.title} />
+      <PropertyImageCarousel images={propertyImages} title={property.title} />
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-8">
@@ -59,8 +68,8 @@ const PropertyDetail = () => {
             />
             <PropertyFeatures title="Features" features={property.amenities || []} />
             <PropertyContactButtons
-              phone={property.phone}
-              whatsapp={property.whatsapp}
+              phone={property.phone || ""}
+              whatsapp={property.whatsapp || ""}
               title={property.title}
             />
           </div>
