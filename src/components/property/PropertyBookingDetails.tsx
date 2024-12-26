@@ -42,7 +42,7 @@ export const PropertyBookingDetails = ({
     const message = `Hello, I'm interested in booking "${title}"\n\nCheck-in: ${format(
       checkIn,
       "PP"
-    )}\nCheck-out: ${format(checkOut, "PP")}\nAdults: ${adults}\nChildren: ${children}\nTotal nights: ${nights}\nTotal price: ${totalPrice.toLocaleString()} FCFA`;
+    )}\nCheck-out: ${format(checkOut, "PP")}\nAdults: ${adults}\nChildren: ${children}\nTotal nights: ${nights}\nTotal price: ${totalPrice.toLocaleString()} FCFA (${parseInt(price).toLocaleString()} FCFA/night)`;
 
     window.open(
       `https://wa.me/${whatsapp}?text=${encodeURIComponent(message)}`,
@@ -51,8 +51,14 @@ export const PropertyBookingDetails = ({
   };
 
   return (
-    <div className="space-y-4 p-6 bg-secondary/20 rounded-lg">
-      <h3 className="text-lg font-semibold">Book Your Stay</h3>
+    <div className="space-y-4 p-6 bg-secondary/20 rounded-lg sticky top-20">
+      <div className="flex items-baseline justify-between">
+        <h3 className="text-lg font-semibold">Book Your Stay</h3>
+        <p className="text-2xl font-bold text-primary">
+          {parseInt(price).toLocaleString()} FCFA
+          <span className="text-sm font-normal text-muted-foreground">/night</span>
+        </p>
+      </div>
       
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
@@ -78,6 +84,7 @@ export const PropertyBookingDetails = ({
                 disabled={(date) =>
                   date < new Date() || (checkOut ? date >= checkOut : false)
                 }
+                initialFocus
               />
             </PopoverContent>
           </Popover>
@@ -106,6 +113,7 @@ export const PropertyBookingDetails = ({
                 disabled={(date) =>
                   !checkIn || date <= checkIn || date < addDays(checkIn, 1)
                 }
+                initialFocus
               />
             </PopoverContent>
           </Popover>
@@ -145,18 +153,29 @@ export const PropertyBookingDetails = ({
       </div>
 
       {checkIn && checkOut && (
-        <div className="pt-4 border-t">
-          <div className="flex justify-between mb-2">
-            <span>
-              {differenceInDays(checkOut, checkIn)} nights x{" "}
-              {parseInt(price).toLocaleString()} FCFA
-            </span>
-            <span>
-              {(
-                parseInt(price) * differenceInDays(checkOut, checkIn)
-              ).toLocaleString()}{" "}
-              FCFA
-            </span>
+        <div className="pt-4 border-t space-y-4">
+          <div className="space-y-2">
+            <div className="flex justify-between text-sm">
+              <span>
+                {differenceInDays(checkOut, checkIn)} nights x{" "}
+                {parseInt(price).toLocaleString()} FCFA
+              </span>
+              <span>
+                {(
+                  parseInt(price) * differenceInDays(checkOut, checkIn)
+                ).toLocaleString()}{" "}
+                FCFA
+              </span>
+            </div>
+            <div className="flex justify-between font-semibold">
+              <span>Total</span>
+              <span>
+                {(
+                  parseInt(price) * differenceInDays(checkOut, checkIn)
+                ).toLocaleString()}{" "}
+                FCFA
+              </span>
+            </div>
           </div>
           <Button 
             className="w-full" 
@@ -165,6 +184,11 @@ export const PropertyBookingDetails = ({
           >
             Book via WhatsApp
           </Button>
+          {!whatsapp && (
+            <p className="text-sm text-muted-foreground text-center">
+              Contact information not available for this property
+            </p>
+          )}
         </div>
       )}
     </div>
