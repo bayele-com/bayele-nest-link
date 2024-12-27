@@ -19,9 +19,7 @@ const BayeleStay = () => {
   const { data: properties, isLoading } = useQuery({
     queryKey: ["furnished-properties", selectedCity],
     queryFn: async () => {
-      console.log("Fetching properties for city:", selectedCity);
-      console.log("Using property type:", PropertyType.FURNISHED);
-      console.log("Using status:", PropertyStatus.AVAILABLE);
+      console.log("Fetching furnished properties for city:", selectedCity);
       
       const { data, error } = await supabase
         .from("properties")
@@ -29,7 +27,6 @@ const BayeleStay = () => {
         .eq("type", PropertyType.FURNISHED)
         .eq("city", selectedCity.toLowerCase())
         .eq("status", PropertyStatus.AVAILABLE)
-        .eq("management_type", "bayele")
         .order("is_featured", { ascending: false });
 
       if (error) {
@@ -40,8 +37,6 @@ const BayeleStay = () => {
       console.log("Fetched properties:", data);
       return data;
     },
-    retry: 3, // Retry failed requests 3 times
-    retryDelay: 1000, // Wait 1 second between retries
   });
 
   return (

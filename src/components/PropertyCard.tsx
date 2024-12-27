@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { PropertyBadges } from "./property/card/PropertyBadges";
 import { PropertyDetails } from "./property/card/PropertyDetails";
 import { PropertyActions } from "./property/card/PropertyActions";
-import type { PropertyStatus } from "@/integrations/supabase/types/enums";
+import type { PropertyStatus, PropertyType } from "@/integrations/supabase/types/enums";
 import { useState } from "react";
 import { getOptimizedImageUrl } from "@/lib/image-optimization";
 import { toast } from "sonner";
@@ -14,7 +14,7 @@ interface PropertyCardProps {
     title: string;
     location: string;
     price: string;
-    type: string;
+    type: PropertyType;
     bedrooms: number;
     bathrooms: number;
     image: string;
@@ -56,6 +56,13 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
     ? "/placeholder.svg" 
     : getOptimizedImageUrl(property.image);
 
+  const getPriceDisplay = () => {
+    const formattedPrice = parseInt(property.price).toLocaleString();
+    return property.type === PropertyType.FURNISHED
+      ? `${formattedPrice} FCFA/night`
+      : `${formattedPrice} FCFA/month`;
+  };
+
   return (
     <Link to={`/property/${property.id}`} className="block">
       <Card className="group overflow-hidden transition-all hover:shadow-lg">
@@ -78,7 +85,7 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
             amenities={property.amenities}
           />
           <PropertyActions
-            price={property.price}
+            price={getPriceDisplay()}
             whatsapp={property.whatsapp}
             phone={property.phone}
             onWhatsAppClick={handleWhatsApp}

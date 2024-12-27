@@ -3,8 +3,8 @@ import { Phone, MessageCircle } from "lucide-react";
 
 interface PropertyActionsProps {
   price: string;
-  whatsapp?: string;
-  phone?: string;
+  whatsapp?: string | null;
+  phone?: string | null;
   onWhatsAppClick: (e: React.MouseEvent) => void;
   onCallClick: (e: React.MouseEvent) => void;
 }
@@ -17,24 +17,29 @@ export const PropertyActions = ({
   onCallClick,
 }: PropertyActionsProps) => {
   return (
-    <div className="flex items-center justify-between pt-2 border-t">
-      <div className="text-xl font-bold text-primary">
-        {price} FCFA
+    <div className="space-y-4">
+      <div className="flex items-baseline justify-between">
+        <p className="text-2xl font-bold text-primary">{price}</p>
       </div>
       <div className="flex gap-2">
         {whatsapp && (
           <Button
-            size="sm"
             variant="outline"
+            className="flex-1"
             onClick={onWhatsAppClick}
-            className="text-green-600 hover:text-green-700"
           >
-            <MessageCircle className="h-4 w-4" />
+            <MessageCircle className="mr-2 h-4 w-4" />
+            WhatsApp
           </Button>
         )}
         {phone && (
-          <Button size="sm" onClick={onCallClick}>
-            <Phone className="h-4 w-4" />
+          <Button
+            variant="outline"
+            className="flex-1"
+            onClick={onCallClick}
+          >
+            <Phone className="mr-2 h-4 w-4" />
+            Call
           </Button>
         )}
       </div>
