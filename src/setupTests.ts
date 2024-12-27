@@ -1,10 +1,8 @@
-/// <reference types="vitest" />
-/// <reference types="@testing-library/jest-dom" />
-
 import '@testing-library/jest-dom';
-import { expect, afterEach } from 'vitest';
 import { cleanup } from '@testing-library/react';
-import matchers from '@testing-library/jest-dom/matchers';
+import { afterEach } from 'vitest';
+import * as matchers from '@testing-library/jest-dom/matchers';
+import { expect } from 'vitest';
 
 // Extend Vitest's expect method with methods from react-testing-library
 expect.extend(matchers);
