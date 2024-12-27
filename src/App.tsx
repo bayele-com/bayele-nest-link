@@ -44,25 +44,17 @@ const AppRoutes = () => {
   );
 };
 
-const AppContent: React.FC = () => {
-  return (
-    <React.Fragment>
-      <FlashBanner />
-      <AppRoutes />
-      <WhatsAppButton />
-      <Toaster />
-      <Sonner />
-    </React.Fragment>
-  );
-};
-
 const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <AuthProvider>
           <TooltipProvider>
-            <AppContent />
+            <FlashBanner />
+            <AppRoutes />
+            <WhatsAppButton />
+            <Toaster />
+            <Sonner />
           </TooltipProvider>
         </AuthProvider>
       </BrowserRouter>
