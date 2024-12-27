@@ -44,10 +44,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         password,
       });
 
-      if (error) {
-        console.error('Sign in error:', error);
-        throw error;
-      }
+      if (error) throw error;
 
       if (!data.user) {
         throw new Error('No user data returned');
@@ -133,6 +130,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     resetPassword,
   };
 
+  // Only render children when auth is initialized
   return (
     <AuthContext.Provider value={value}>
       {!loading && children}
