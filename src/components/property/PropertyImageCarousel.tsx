@@ -40,7 +40,7 @@ const PropertyImageCarousel = ({ images, title }: PropertyImageCarouselProps) =>
           <CarouselItem key={index}>
             <div className="aspect-video relative rounded-lg overflow-hidden bg-muted">
               <img
-                src={imageLoadErrors[image] ? '/placeholder.svg' : getOptimizedImageUrl(image, 1200)}
+                src={imageLoadErrors[image] ? '/placeholder.svg' : getOptimizedImageUrl(image)}
                 alt={`${title} - Image ${index + 1}`}
                 className="object-cover w-full h-full"
                 onError={() => handleImageError(image)}

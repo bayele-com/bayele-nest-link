@@ -54,7 +54,7 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
 
   const imageUrl = imageError || !property.image 
     ? "/placeholder.svg" 
-    : getOptimizedImageUrl(property.image, 400);
+    : getOptimizedImageUrl(property.image);
 
   return (
     <Link to={`/property/${property.id}`} className="block">
