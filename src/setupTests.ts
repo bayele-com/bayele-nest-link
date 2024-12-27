@@ -53,6 +53,7 @@ Object.defineProperty(window, 'ResizeObserver', {
   value: ResizeObserver,
 });
 
+// Extend Jest matchers
 declare global {
   namespace jest {
     interface Matchers<R> {
@@ -83,3 +84,5 @@ declare global {
     }
   }
 }
+
+export {};
