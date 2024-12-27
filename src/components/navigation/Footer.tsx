@@ -69,24 +69,10 @@ const Footer = () => {
           {/* Payment Methods */}
           <div className="space-y-4">
             <h4 className="font-semibold">Payment Methods</h4>
-            <div className="space-y-4">
-              <div className="flex flex-col gap-4">
-                <img 
-                  src="/lovable-uploads/c26d6cb7-e1f1-4904-84c8-740dbb51887e.png" 
-                  alt="MTN MoMo" 
-                  className="h-12 w-auto"
-                />
-                <img 
-                  src="/lovable-uploads/391cdf32-b16e-4d43-a9c8-5e4f29483bb6.png" 
-                  alt="Orange Money" 
-                  className="h-12 w-auto"
-                />
-              </div>
-              <ul className="space-y-1 text-sm text-muted-foreground">
-                <li>• MTN Mobile Money</li>
-                <li>• Orange Money</li>
-              </ul>
-            </div>
+            <ul className="space-y-1 text-sm text-muted-foreground">
+              <li>• MTN Mobile Money</li>
+              <li>• Orange Money</li>
+            </ul>
           </div>
 
           {/* Social Links */}
