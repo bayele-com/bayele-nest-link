@@ -5,6 +5,7 @@ import { PropertyDetails } from "./property/card/PropertyDetails";
 import { PropertyActions } from "./property/card/PropertyActions";
 import type { PropertyStatus } from "@/integrations/supabase/types/enums";
 import { useState } from "react";
+import { getOptimizedImageUrl } from "@/lib/image-optimization";
 
 interface PropertyCardProps {
   property: {
@@ -49,11 +50,12 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
     setImageError(true);
   };
 
-  // Use a placeholder image if the property image is not available or failed to load
-  const imageUrl = imageError || !property.image ? "/placeholder.svg" : property.image;
+  const imageUrl = imageError || !property.image 
+    ? "/placeholder.svg" 
+    : getOptimizedImageUrl(property.image, 400);
 
   return (
-    <Link to={`/property/${property.id}`}>
+    <Link to={`/property/${property.id}`} className="block">
       <Card className="group overflow-hidden transition-all hover:shadow-lg">
         <div className="relative">
           <img
@@ -61,6 +63,7 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
             alt={property.title}
             className="h-48 w-full object-cover transition-transform group-hover:scale-105"
             onError={handleImageError}
+            loading="lazy"
           />
           <PropertyBadges type={property.type} status={property.status} />
         </div>
