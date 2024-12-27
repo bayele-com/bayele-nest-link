@@ -26,8 +26,8 @@ const queryClient = new QueryClient();
 const App = () => {
   return (
     <React.StrictMode>
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
+      <BrowserRouter>
+        <QueryClientProvider client={queryClient}>
           <AuthProvider>
             <TooltipProvider delayDuration={0}>
               <FlashBanner />
@@ -52,8 +52,8 @@ const App = () => {
               <Sonner />
             </TooltipProvider>
           </AuthProvider>
-        </BrowserRouter>
-      </QueryClientProvider>
+        </QueryClientProvider>
+      </BrowserRouter>
     </React.StrictMode>
   );
 };
