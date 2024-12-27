@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import Index from "./pages/Index";
 import BayeleStay from "./pages/BayeleStay";
 import PropertyDetail from "./pages/PropertyDetail";
@@ -19,7 +20,6 @@ import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
 import UserProfile from "./pages/UserProfile";
 import WhatsAppButton from "./components/chat/WhatsAppButton";
 import FlashBanner from "./components/FlashBanner";
-import { TooltipProvider } from "@/components/ui/tooltip";
 
 const queryClient = new QueryClient();
 
