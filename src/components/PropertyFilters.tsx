@@ -30,7 +30,11 @@ export function PropertyFilters({ onFilterChange }: PropertyFiltersProps) {
   const handleFilterChange = (key: keyof FilterValues, value: string) => {
     const newFilters = { ...filters, [key]: value };
     setFilters(newFilters);
-    onFilterChange(newFilters);
+  };
+
+  const handleSearch = () => {
+    console.log("Applying filters:", filters);
+    onFilterChange(filters);
   };
 
   return (
@@ -57,7 +61,7 @@ export function PropertyFilters({ onFilterChange }: PropertyFiltersProps) {
       </div>
 
       <div className="flex justify-end">
-        <Button className="w-full md:w-auto">
+        <Button onClick={handleSearch} className="w-full md:w-auto">
           <Search className="mr-2 h-4 w-4" />
           Search Properties
         </Button>

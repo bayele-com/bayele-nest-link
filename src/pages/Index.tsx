@@ -25,6 +25,7 @@ const Index = () => {
   const { data: properties, isLoading } = useQuery({
     queryKey: ["properties", filters],
     queryFn: async () => {
+      console.log("Fetching properties with filters:", filters);
       let query = supabase
         .from("properties")
         .select("*")
@@ -58,6 +59,7 @@ const Index = () => {
   });
 
   const handleFilterChange = (newFilters: FilterValues) => {
+    console.log("Filters updated:", newFilters);
     setFilters(newFilters);
   };
 
