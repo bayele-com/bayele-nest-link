@@ -70,22 +70,24 @@ const AppRoutes = () => {
   );
 };
 
-const App = () => (
-  <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
+const App = () => {
+  return (
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <TooltipProvider delayDuration={0}>
-            <FlashBanner />
-            <AppRoutes />
-            <WhatsAppButton />
-            <Toaster />
-            <Sonner />
-          </TooltipProvider>
+          <React.StrictMode>
+            <TooltipProvider delayDuration={0}>
+              <FlashBanner />
+              <AppRoutes />
+              <WhatsAppButton />
+              <Toaster />
+              <Sonner />
+            </TooltipProvider>
+          </React.StrictMode>
         </AuthProvider>
-      </BrowserRouter>
-    </QueryClientProvider>
-  </React.StrictMode>
-);
+      </QueryClientProvider>
+    </BrowserRouter>
+  );
+};
 
 export default App;
