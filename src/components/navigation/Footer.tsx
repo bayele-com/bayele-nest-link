@@ -9,7 +9,7 @@ const Footer = () => {
   return (
     <footer className="bg-background border-t">
       <div className="container py-12 md:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Company Links */}
           <div className="space-y-4">
             <h4 className="font-semibold">Company</h4>
@@ -66,6 +66,24 @@ const Footer = () => {
             </ul>
           </div>
 
+          {/* Payment Methods */}
+          <div className="space-y-4">
+            <h4 className="font-semibold">Payment Methods</h4>
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <img 
+                  src="/lovable-uploads/a7f2e9f3-0cd2-49cd-8571-d39191abcc3a.png" 
+                  alt="MTN Mobile Money & Orange Money" 
+                  className="h-12 w-auto"
+                />
+              </div>
+              <ul className="space-y-1 text-sm text-muted-foreground">
+                <li>• MTN Mobile Money</li>
+                <li>• Orange Money</li>
+              </ul>
+            </div>
+          </div>
+
           {/* Social Links */}
           <div className="space-y-4">
             <h4 className="font-semibold">Connect with us</h4>
@@ -79,7 +97,7 @@ const Footer = () => {
                 <Facebook className="h-5 w-5" />
               </a>
               <a
-                href="https://wa.me/message/xxxxx"
+                href="https://wa.me/+237673823692"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-foreground"
