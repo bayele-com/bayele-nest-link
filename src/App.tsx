@@ -24,7 +24,6 @@ import { useAuth } from "./contexts/AuthContext";
 
 const queryClient = new QueryClient();
 
-// Protected route wrapper component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuth();
   
