@@ -71,8 +71,8 @@ const AppRoutes = () => {
 
 const App = () => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <TooltipProvider delayDuration={0}>
             <FlashBanner />
@@ -82,8 +82,8 @@ const App = () => {
             <Sonner />
           </TooltipProvider>
         </AuthProvider>
-      </BrowserRouter>
-    </QueryClientProvider>
+      </QueryClientProvider>
+    </BrowserRouter>
   );
 };
 
