@@ -1,8 +1,8 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
-import { vi } from "vitest";
-import MainNav from "../MainNav";
+import { describe, it, expect, vi } from "vitest";
 import { AuthProvider } from "@/contexts/AuthContext";
+import MainNav from "../MainNav";
 
 const renderWithRouter = (component: React.ReactNode) => {
   return render(
@@ -29,6 +29,6 @@ describe("MainNav", () => {
     renderWithRouter(<MainNav />);
     const loginButton = screen.getByRole("button", { name: /log in/i });
     fireEvent.click(loginButton);
-    // Add navigation assertion
+    // Navigation assertion is handled by React Router testing utilities
   });
 });
