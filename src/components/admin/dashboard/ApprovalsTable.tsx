@@ -30,6 +30,14 @@ interface ApprovalsTableProps {
 }
 
 export const ApprovalsTable = ({ properties, onApprove, onReject }: ApprovalsTableProps) => {
+  if (!properties.length) {
+    return (
+      <div className="text-center py-8 text-muted-foreground">
+        No properties pending approval
+      </div>
+    );
+  }
+
   return (
     <Table>
       <TableHeader>

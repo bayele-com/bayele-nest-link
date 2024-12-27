@@ -14,6 +14,7 @@ export const ApprovalActions = ({ propertyId, onApprove, onReject }: ApprovalAct
         variant="outline" 
         size="icon"
         onClick={() => onApprove(propertyId)}
+        title="Approve Property"
       >
         <CheckCircle2 className="h-4 w-4 text-green-500" />
       </Button>
@@ -21,6 +22,7 @@ export const ApprovalActions = ({ propertyId, onApprove, onReject }: ApprovalAct
         variant="outline" 
         size="icon"
         onClick={() => onReject(propertyId)}
+        title="Reject Property"
       >
         <XCircle className="h-4 w-4 text-red-500" />
       </Button>

@@ -40,18 +40,36 @@ const PendingApprovals = () => {
   });
 
   const updatePropertyStatus = useMutation({
-    mutationFn: async ({ propertyId, status }: { propertyId: string, status: PropertyStatus }) => {
-      console.log('Updating property status:', { propertyId, status });
-      const { error } = await supabase
+    mutationFn: async ({ 
+      propertyId, 
+      status, 
+      reason 
+    }: { 
+      propertyId: string; 
+      status: PropertyStatus; 
+      reason?: string;
+    }) => {
+      const { error: updateError } = await supabase
         .from('properties')
-        .update({ status })
+        .update({ 
+          status,
+          ...(status === 'rejected' && { rejection_reason: reason })
+        })
         .eq('id', propertyId);
 
-      if (error) {
-        console.error('Error updating property status:', error);
-        throw error;
-      }
-      console.log('Property status updated successfully');
+      if (updateError) throw updateError;
+
+      // Record status change in history
+      const { error: historyError } = await supabase
+        .from('property_status_history')
+        .insert({
+          property_id: propertyId,
+          previous_status: 'pending',
+          new_status: status,
+          reason
+        });
+
+      if (historyError) throw historyError;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['pending-properties'] });
@@ -60,7 +78,10 @@ const PendingApprovals = () => {
 
   const handleApprove = async (propertyId: string) => {
     try {
-      await updatePropertyStatus.mutateAsync({ propertyId, status: 'available' });
+      await updatePropertyStatus.mutateAsync({ 
+        propertyId, 
+        status: 'available' 
+      });
       toast({
         title: "Property Approved",
         description: "The property has been approved and is now live.",
@@ -77,7 +98,14 @@ const PendingApprovals = () => {
 
   const handleReject = async (propertyId: string) => {
     try {
-      await updatePropertyStatus.mutateAsync({ propertyId, status: 'rejected' });
+      const reason = prompt("Please provide a reason for rejection:");
+      if (reason === null) return; // User cancelled
+
+      await updatePropertyStatus.mutateAsync({ 
+        propertyId, 
+        status: 'rejected',
+        reason 
+      });
       toast({
         title: "Property Rejected",
         description: "The property has been rejected.",
