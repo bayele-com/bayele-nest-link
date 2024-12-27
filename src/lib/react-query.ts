@@ -1,10 +1,11 @@
 import { QueryClient } from '@tanstack/react-query';
+import { supabase } from './supabase';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 1000 * 60 * 5, // Data is fresh for 5 minutes
-      cacheTime: 1000 * 60 * 30, // Cache persists for 30 minutes
+      gcTime: 1000 * 60 * 30, // Cache persists for 30 minutes (replaced cacheTime)
       retry: 2,
       refetchOnWindowFocus: false,
       refetchOnMount: true,
