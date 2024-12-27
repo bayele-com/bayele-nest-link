@@ -1,3 +1,5 @@
+/// <reference types="@testing-library/jest-dom" />
+
 import '@testing-library/jest-dom';
 
 declare global {
@@ -16,6 +18,11 @@ declare global {
       toBeValid(): R;
       toBeInvalid(): R;
       toHaveFocus(): R;
+      toHaveStyle(css: Record<string, any>): R;
+      toContainElement(element: HTMLElement | null): R;
+      toContainHTML(html: string): R;
+      toHaveDisplayValue(value: string | RegExp | (string | RegExp)[]): R;
+      toHaveDescription(text: string | RegExp): R;
     }
   }
 }
