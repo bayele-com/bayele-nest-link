@@ -9,16 +9,16 @@ import { initializeMonitoring } from "./lib/monitoring";
 initializeMonitoring();
 registerServiceWorker();
 
-const root = document.getElementById("root");
+const rootElement = document.getElementById("root");
 
-if (!root) {
+if (!rootElement) {
   throw new Error("Root element not found");
 }
 
-const app = (
+const root = ReactDOM.createRoot(rootElement);
+
+root.render(
   <React.StrictMode>
     <App />
   </React.StrictMode>
 );
-
-ReactDOM.createRoot(root).render(app);
