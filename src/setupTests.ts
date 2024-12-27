@@ -7,7 +7,7 @@ import { expect } from 'vitest';
 // Extend Vitest's expect method with methods from react-testing-library
 expect.extend(matchers);
 
-// Cleanup after each test case
+// Cleanup after each test case (e.g. clearing jsdom)
 afterEach(() => {
   cleanup();
 });
