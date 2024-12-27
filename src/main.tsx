@@ -9,7 +9,13 @@ import { initializeMonitoring } from "./lib/monitoring";
 initializeMonitoring();
 registerServiceWorker();
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
+const root = document.getElementById("root");
+
+if (!root) {
+  throw new Error("Root element not found");
+}
+
+ReactDOM.createRoot(root).render(
   <React.StrictMode>
     <App />
   </React.StrictMode>
