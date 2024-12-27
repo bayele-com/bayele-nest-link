@@ -9,7 +9,7 @@ import matchers from '@testing-library/jest-dom/matchers';
 // Extend Vitest's expect method with methods from react-testing-library
 expect.extend(matchers);
 
-// Cleanup after each test case (e.g. clearing jsdom)
+// Cleanup after each test case
 afterEach(() => {
   cleanup();
 });
