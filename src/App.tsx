@@ -46,10 +46,10 @@ const AppRoutes = () => {
 
 const App: React.FC = () => {
   return (
-    <BrowserRouter>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <TooltipProvider>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <TooltipProvider>
+          <AuthProvider>
             <div className="app">
               <FlashBanner />
               <AppRoutes />
@@ -57,10 +57,10 @@ const App: React.FC = () => {
               <Toaster />
               <Sonner />
             </div>
-          </TooltipProvider>
-        </AuthProvider>
-      </QueryClientProvider>
-    </BrowserRouter>
+          </AuthProvider>
+        </TooltipProvider>
+      </BrowserRouter>
+    </QueryClientProvider>
   );
 };
 
