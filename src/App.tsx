@@ -26,9 +26,9 @@ const queryClient = new QueryClient();
 const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <TooltipProvider>
-          <BrowserRouter>
+      <BrowserRouter>
+        <AuthProvider>
+          <TooltipProvider>
             <FlashBanner />
             <Routes>
               <Route path="/" element={<Index />} />
@@ -49,9 +49,9 @@ const App: React.FC = () => {
             <WhatsAppButton />
             <Toaster />
             <Sonner />
-          </BrowserRouter>
-        </TooltipProvider>
-      </AuthProvider>
+          </TooltipProvider>
+        </AuthProvider>
+      </BrowserRouter>
     </QueryClientProvider>
   );
 };
