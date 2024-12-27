@@ -20,70 +20,39 @@ import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
 import UserProfile from "./pages/UserProfile";
 import WhatsAppButton from "./components/chat/WhatsAppButton";
 import FlashBanner from "./components/FlashBanner";
-import { useAuth } from "./contexts/AuthContext";
 
 const queryClient = new QueryClient();
 
-const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { user } = useAuth();
-  
-  if (!user) {
-    return <Navigate to="/auth/login" replace />;
-  }
-  
-  return <>{children}</>;
-};
-
-const AppRoutes = () => {
-  return (
-    <Routes>
-      <Route path="/" element={<Index />} />
-      <Route path="/stay" element={<BayeleStay />} />
-      <Route path="/property/:id" element={<PropertyDetail />} />
-      <Route path="/manage" element={<PropertyManagement />} />
-      <Route path="/auth/login" element={<LoginPage />} />
-      <Route path="/auth/register" element={<RegisterPage />} />
-      <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
-      <Route 
-        path="/profile" 
-        element={
-          <ProtectedRoute>
-            <UserProfile />
-          </ProtectedRoute>
-        } 
-      />
-      <Route 
-        path="/admin" 
-        element={
-          <ProtectedRoute>
-            <AdminLayout />
-          </ProtectedRoute>
-        }
-      >
-        <Route index element={<AdminDashboard />} />
-        <Route path="properties" element={<AdminProperties />} />
-        <Route path="users" element={<AdminUsers />} />
-        <Route path="settings" element={<AdminSettings />} />
-      </Route>
-    </Routes>
-  );
-};
-
 const App = () => {
   return (
-    <BrowserRouter>
-      <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
         <AuthProvider>
           <TooltipProvider delayDuration={0}>
             <FlashBanner />
-            <AppRoutes />
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/stay" element={<BayeleStay />} />
+              <Route path="/property/:id" element={<PropertyDetail />} />
+              <Route path="/manage" element={<PropertyManagement />} />
+              <Route path="/auth/login" element={<LoginPage />} />
+              <Route path="/auth/register" element={<RegisterPage />} />
+              <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
+              <Route path="/profile" element={<UserProfile />} />
+              <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<AdminDashboard />} />
+                <Route path="properties" element={<AdminProperties />} />
+                <Route path="users" element={<AdminUsers />} />
+                <Route path="settings" element={<AdminSettings />} />
+              </Route>
+            </Routes>
             <WhatsAppButton />
             <Toaster />
             <Sonner />
           </TooltipProvider>
         </AuthProvider>
-      </QueryClientProvider>
-    </BrowserRouter>
+      </BrowserRouter>
+    </QueryClientProvider>
   );
 };
 
