@@ -46,8 +46,8 @@ const AppRoutes = () => {
 
 const App: React.FC = () => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <TooltipProvider>
             <div className="app">
@@ -59,8 +59,8 @@ const App: React.FC = () => {
             </div>
           </TooltipProvider>
         </AuthProvider>
-      </BrowserRouter>
-    </QueryClientProvider>
+      </QueryClientProvider>
+    </BrowserRouter>
   );
 };
 
