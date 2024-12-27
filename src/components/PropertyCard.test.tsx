@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { describe, it, vi, expect } from 'vitest';
 import PropertyCard from './PropertyCard';
+import { PropertyStatus, PropertyType } from '@/integrations/supabase/types/enums';
 
 describe('PropertyCard', () => {
   const mockProperty = {
@@ -9,11 +10,11 @@ describe('PropertyCard', () => {
     title: 'Test Property',
     location: 'Test Location',
     price: '100000',
-    type: 'apartment',
+    type: PropertyType.APARTMENT,
     bedrooms: 2,
     bathrooms: 1,
     image: '/test-image.jpg',
-    status: 'available',
+    status: PropertyStatus.AVAILABLE,
     amenities: ['wifi', 'parking'],
     whatsapp: '123456789',
     phone: '987654321'
