@@ -49,13 +49,15 @@ const App: React.FC = () => {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <AuthProvider>
-          <TooltipProvider>
-            <FlashBanner />
-            <AppRoutes />
-            <WhatsAppButton />
-            <Toaster />
-            <Sonner />
-          </TooltipProvider>
+          <React.StrictMode>
+            <TooltipProvider>
+              <FlashBanner />
+              <AppRoutes />
+              <WhatsAppButton />
+              <Toaster />
+              <Sonner />
+            </TooltipProvider>
+          </React.StrictMode>
         </AuthProvider>
       </BrowserRouter>
     </QueryClientProvider>
