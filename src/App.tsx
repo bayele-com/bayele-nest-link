@@ -25,34 +25,36 @@ const queryClient = new QueryClient();
 
 const App: React.FC = () => {
   return (
-    <BrowserRouter>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <TooltipProvider>
-            <FlashBanner />
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/stay" element={<BayeleStay />} />
-              <Route path="/property/:id" element={<PropertyDetail />} />
-              <Route path="/manage" element={<PropertyManagement />} />
-              <Route path="/auth/login" element={<LoginPage />} />
-              <Route path="/auth/register" element={<RegisterPage />} />
-              <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
-              <Route path="/profile" element={<UserProfile />} />
-              <Route path="/admin" element={<AdminLayout />}>
-                <Route index element={<AdminDashboard />} />
-                <Route path="properties" element={<AdminProperties />} />
-                <Route path="users" element={<AdminUsers />} />
-                <Route path="settings" element={<AdminSettings />} />
-              </Route>
-            </Routes>
-            <WhatsAppButton />
-            <Toaster />
-            <Sonner />
-          </TooltipProvider>
-        </AuthProvider>
-      </QueryClientProvider>
-    </BrowserRouter>
+    <React.StrictMode>
+      <BrowserRouter>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <TooltipProvider>
+              <FlashBanner />
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/stay" element={<BayeleStay />} />
+                <Route path="/property/:id" element={<PropertyDetail />} />
+                <Route path="/manage" element={<PropertyManagement />} />
+                <Route path="/auth/login" element={<LoginPage />} />
+                <Route path="/auth/register" element={<RegisterPage />} />
+                <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
+                <Route path="/profile" element={<UserProfile />} />
+                <Route path="/admin" element={<AdminLayout />}>
+                  <Route index element={<AdminDashboard />} />
+                  <Route path="properties" element={<AdminProperties />} />
+                  <Route path="users" element={<AdminUsers />} />
+                  <Route path="settings" element={<AdminSettings />} />
+                </Route>
+              </Routes>
+              <WhatsAppButton />
+              <Toaster />
+              <Sonner />
+            </TooltipProvider>
+          </AuthProvider>
+        </QueryClientProvider>
+      </BrowserRouter>
+    </React.StrictMode>
   );
 };
 
