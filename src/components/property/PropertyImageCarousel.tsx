@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/carousel";
 import { useState } from "react";
 import { getOptimizedImageUrl } from "@/lib/image-optimization";
+import { toast } from "sonner";
 
 interface PropertyImageCarouselProps {
   images: string[];
@@ -19,6 +20,7 @@ const PropertyImageCarousel = ({ images, title }: PropertyImageCarouselProps) =>
   const handleImageError = (imageUrl: string) => {
     console.error(`Failed to load image: ${imageUrl}`);
     setImageLoadErrors(prev => ({ ...prev, [imageUrl]: true }));
+    toast.error("Failed to load property image");
   };
 
   // If all images have failed to load or no images provided, show a message

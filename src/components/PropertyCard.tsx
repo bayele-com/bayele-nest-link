@@ -6,6 +6,7 @@ import { PropertyActions } from "./property/card/PropertyActions";
 import type { PropertyStatus } from "@/integrations/supabase/types/enums";
 import { useState } from "react";
 import { getOptimizedImageUrl } from "@/lib/image-optimization";
+import { toast } from "sonner";
 
 interface PropertyCardProps {
   property: {
@@ -48,6 +49,7 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
   const handleImageError = () => {
     console.error('Image failed to load:', property.image);
     setImageError(true);
+    toast.error("Failed to load property image");
   };
 
   const imageUrl = imageError || !property.image 
