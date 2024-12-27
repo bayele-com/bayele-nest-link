@@ -48,8 +48,8 @@ const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <TooltipProvider>
-          <AuthProvider>
+        <AuthProvider>
+          <TooltipProvider>
             <div className="app">
               <FlashBanner />
               <AppRoutes />
@@ -57,8 +57,8 @@ const App: React.FC = () => {
               <Toaster />
               <Sonner />
             </div>
-          </AuthProvider>
-        </TooltipProvider>
+          </TooltipProvider>
+        </AuthProvider>
       </BrowserRouter>
     </QueryClientProvider>
   );
