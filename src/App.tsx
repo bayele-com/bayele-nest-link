@@ -23,32 +23,36 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 
 const queryClient = new QueryClient();
 
-const AppContent = () => {
+const AppRoutes = () => {
   return (
-    <div>
-      <TooltipProvider>
-        <FlashBanner />
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/stay" element={<BayeleStay />} />
-          <Route path="/property/:id" element={<PropertyDetail />} />
-          <Route path="/manage" element={<PropertyManagement />} />
-          <Route path="/auth/login" element={<LoginPage />} />
-          <Route path="/auth/register" element={<RegisterPage />} />
-          <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
-          <Route path="/profile" element={<UserProfile />} />
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<AdminDashboard />} />
-            <Route path="properties" element={<AdminProperties />} />
-            <Route path="users" element={<AdminUsers />} />
-            <Route path="settings" element={<AdminSettings />} />
-          </Route>
-        </Routes>
-        <WhatsAppButton />
-        <Toaster />
-        <Sonner />
-      </TooltipProvider>
-    </div>
+    <Routes>
+      <Route path="/" element={<Index />} />
+      <Route path="/stay" element={<BayeleStay />} />
+      <Route path="/property/:id" element={<PropertyDetail />} />
+      <Route path="/manage" element={<PropertyManagement />} />
+      <Route path="/auth/login" element={<LoginPage />} />
+      <Route path="/auth/register" element={<RegisterPage />} />
+      <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
+      <Route path="/profile" element={<UserProfile />} />
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route index element={<AdminDashboard />} />
+        <Route path="properties" element={<AdminProperties />} />
+        <Route path="users" element={<AdminUsers />} />
+        <Route path="settings" element={<AdminSettings />} />
+      </Route>
+    </Routes>
+  );
+};
+
+const AppContent: React.FC = () => {
+  return (
+    <React.Fragment>
+      <FlashBanner />
+      <AppRoutes />
+      <WhatsAppButton />
+      <Toaster />
+      <Sonner />
+    </React.Fragment>
   );
 };
 
@@ -57,7 +61,9 @@ const App: React.FC = () => {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <AuthProvider>
-          <AppContent />
+          <TooltipProvider>
+            <AppContent />
+          </TooltipProvider>
         </AuthProvider>
       </BrowserRouter>
     </QueryClientProvider>

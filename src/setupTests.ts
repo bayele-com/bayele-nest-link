@@ -1,13 +1,10 @@
-/// <reference types="vitest" />
 import '@testing-library/jest-dom';
-import type { TestingLibraryMatchers } from '@testing-library/jest-dom/matchers';
+import { expect, afterEach } from 'vitest';
+import { cleanup } from '@testing-library/react';
+import * as matchers from '@testing-library/jest-dom/matchers';
 
-declare global {
-  namespace Vi {
-    interface JestAssertion<T = any>
-      extends jest.Matchers<void, T>,
-        TestingLibraryMatchers<T, void> {}
-  }
-}
+expect.extend(matchers);
 
-export {};
+afterEach(() => {
+  cleanup();
+});
