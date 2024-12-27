@@ -1,7 +1,6 @@
 import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -20,6 +19,7 @@ import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
 import UserProfile from "./pages/UserProfile";
 import WhatsAppButton from "./components/chat/WhatsAppButton";
 import FlashBanner from "./components/FlashBanner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const queryClient = new QueryClient();
 
@@ -28,7 +28,7 @@ const App: React.FC = () => {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <AuthProvider>
-          <TooltipProvider>
+          <TooltipProvider delayDuration={0}>
             <FlashBanner />
             <Routes>
               <Route path="/" element={<Index />} />
