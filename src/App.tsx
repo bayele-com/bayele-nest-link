@@ -46,21 +46,23 @@ const AppRoutes = () => {
 
 const App: React.FC = () => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <TooltipProvider>
-          <AuthProvider>
-            <div className="app">
-              <FlashBanner />
-              <AppRoutes />
-              <WhatsAppButton />
-              <Toaster />
-              <Sonner />
-            </div>
-          </AuthProvider>
-        </TooltipProvider>
-      </BrowserRouter>
-    </QueryClientProvider>
+    <React.StrictMode>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <TooltipProvider>
+            <AuthProvider>
+              <div className="app">
+                <FlashBanner />
+                <AppRoutes />
+                <WhatsAppButton />
+                <Toaster />
+                <Sonner />
+              </div>
+            </AuthProvider>
+          </TooltipProvider>
+        </BrowserRouter>
+      </QueryClientProvider>
+    </React.StrictMode>
   );
 };
 
