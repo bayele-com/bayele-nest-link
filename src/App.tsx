@@ -11,23 +11,25 @@ import FlashBanner from "./components/FlashBanner";
 
 const queryClient = new QueryClient();
 
-const App = () => {
+const App: React.FC = () => {
   return (
-    <BrowserRouter>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <TooltipProvider>
-            <div className="app">
-              <FlashBanner />
-              <AppRoutes />
-              <WhatsAppButton />
-              <Toaster />
-              <Sonner />
-            </div>
-          </TooltipProvider>
-        </AuthProvider>
-      </QueryClientProvider>
-    </BrowserRouter>
+    <React.StrictMode>
+      <BrowserRouter>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <TooltipProvider>
+              <div className="app">
+                <FlashBanner />
+                <AppRoutes />
+                <WhatsAppButton />
+                <Toaster />
+                <Sonner />
+              </div>
+            </TooltipProvider>
+          </AuthProvider>
+        </QueryClientProvider>
+      </BrowserRouter>
+    </React.StrictMode>
   );
 };
 
