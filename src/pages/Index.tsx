@@ -54,6 +54,7 @@ const Index = () => {
         throw error;
       }
       
+      console.log("Fetched properties:", data);
       return data;
     },
   });
