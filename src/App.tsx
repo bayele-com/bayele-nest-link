@@ -13,23 +13,21 @@ const queryClient = new QueryClient();
 
 const App: React.FC = () => {
   return (
-    <React.StrictMode>
+    <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <QueryClientProvider client={queryClient}>
-          <AuthProvider>
-            <TooltipProvider>
-              <div className="app">
-                <FlashBanner />
-                <AppRoutes />
-                <WhatsAppButton />
-                <Toaster />
-                <Sonner />
-              </div>
-            </TooltipProvider>
-          </AuthProvider>
-        </QueryClientProvider>
+        <AuthProvider>
+          <TooltipProvider>
+            <div className="app">
+              <FlashBanner />
+              <AppRoutes />
+              <WhatsAppButton />
+              <Toaster />
+              <Sonner />
+            </div>
+          </TooltipProvider>
+        </AuthProvider>
       </BrowserRouter>
-    </React.StrictMode>
+    </QueryClientProvider>
   );
 };
 
